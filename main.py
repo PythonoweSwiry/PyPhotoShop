@@ -1,10 +1,4 @@
 import tkinter as tk
-<<<<<<< HEAD
-#eehhhh
-
-=======
-import tkinter.ttk as ttk
->>>>>>> 1495d35 (Add MenuBar)
 
 #Klasa pierwszego, powitalnego okna
 class FirstWindow:
