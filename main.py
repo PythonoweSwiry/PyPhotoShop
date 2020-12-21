@@ -2,7 +2,7 @@ import tkinter as tk
 
 #Klasa pierwszego, powitalnego okna
 class FirstWindow:
-    def __init__(self, first_gui):
+    def __init__(self,first_gui):
         #Ustawienia okna
         self.first_gui = first_gui
         self.first_gui.geometry("500x300")
@@ -32,7 +32,7 @@ class SecondWindow:
     def __init__(self, second_gui):
         #Ustawenia okna
         self.second_gui = second_gui
-        self.second_gui.geometry("804x589")
+        # self.second_gui.geometry("804x589")
         self.second_gui.title("PyPhotoshop v1.0.0")
         # W first_gui działa dodanie ikony okna a w second_gui już nie
         # self.second_gui.wm_iconbitmap(bitmap = "camera.ico")
@@ -58,11 +58,10 @@ class SecondWindow:
             self.MenuBar.add_cascade(label = "Widok", menu = self.ZoomOpctions) #Tworze drugi przycisk i dodaje to co ma wykonać 
 
             self.second_gui.config(menu=self.MenuBar) #Podlaczenie calego menubar do drugiego okna
-        TopMenuBar(self)
 
-        #Stworzenie i ustawienie frame dla widgetow (TopBarFrame dla przycisku plik i opcje na samej górze, BarFrame dla 10 przycisków poniżej)
-        self.WidgetTopBarFrame = tk.Frame(self.second_gui)
-        self.WidgetTopBarFrame.place(x = 0, y = 0)
+        TopMenuBar(self) #Wywołuje funkcje odpowiedzialna za MenuBar
+
+        #Stworzenie i ustawienie frame dla widgetow 
 
         self.WidgetBarFrame = tk.Frame(self.second_gui)
         self.WidgetBarFrame.place(x = 0, y = 30)
@@ -72,26 +71,6 @@ class SecondWindow:
             for Button in ButtonList:
                 Button.pack(side = tk.LEFT)
 
-        def SetTopBarGrid(ButtonTopList):
-            ### Wersja robocza, potem to zmienie
-            # self.x1, self.y1 = 0, 0
-            # for Button in ButtonTopList:
-            #     Button.grid(row = self.x1, column = self.y1)
-            #     self.y1 += 1
-            ###
-            #Ustawienie przycisków plik i opcje 
-            for Button in ButtonTopList:
-                Button.pack(side = tk.LEFT)
-
-
-        self.AllTopBarMenu = [] #Lista do której dodaje przyciski plik i opcje, potrzebne do ustawienia pozycji
-
-        #Tworzenie przycisków plik i opcje
-        # for tb in range(2):
-        #     self.TopBarMenu = tk.Menu(self.WidgetTopBarFrame, tearoff = False)
-        #     self.TopBarMenu.config(text = "Plik" if tb == 1 else "Opcje")
-        #     self.AllTopBarMenu.append(self.TopBarMenu)
-
         self.AllBarButton = [] ##Lista do której dodaje 10 przycisków, potrzebne do ustawienia pozycji
 
         #Tworzenie 10 przycisków (funkcyjnych? Wiadomo o co chodzi :) )
@@ -100,7 +79,6 @@ class SecondWindow:
             self.AllBarButton.append(self.BarButton)
 
         SetBarGrid(self.AllBarButton) #Wywołanie komendy ustawenia przycisków
-        SetTopBarGrid(self.AllTopBarMenu) #Wywołanie komendy ustawenia przycisków
 
         #Stworzenie i ustawienie canvasa
         self.canvas = tk.Canvas(second_gui, width = 800, height = 500, bg = "red")
