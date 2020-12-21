@@ -1,4 +1,6 @@
 import tkinter as tk
+#eehhhh
+
 
 #Klasa pierwszego, powitalnego okna
 class FirstWindow:
