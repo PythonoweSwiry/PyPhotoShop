@@ -7,8 +7,8 @@ class FirstWindow:
         self.first_gui = first_gui
         self.first_gui.geometry("500x300")
         self.first_gui.title("PyPhotoshop v1.0.0")
-        # W first_gui działa dodanie ikony okna a w second_gui już nie
-        # self.first_gui.wm_iconbitmap(bitmap = "camera.ico")
+        # Dodanie ikony w lewym gornym rogu
+        self.first_gui.wm_iconbitmap(bitmap = "camera.ico")
 
         #Stworzenie i ustawienie frame, label i button 
         self.HelloFrame = tk.Frame(self.first_gui)
@@ -34,8 +34,8 @@ class SecondWindow:
         self.second_gui = second_gui
         # self.second_gui.geometry("804x589")
         self.second_gui.title("PyPhotoshop v1.0.0")
-        # W first_gui działa dodanie ikony okna a w second_gui już nie
-        # self.second_gui.wm_iconbitmap(bitmap = "camera.ico")
+        # Dodanie ikony w lewym gornym rogu
+        self.second_gui.wm_iconbitmap(bitmap = "camera.ico")
 
         def TopMenuBar(self):
             # Menu bar (Przycisku na samej górze)
@@ -64,25 +64,25 @@ class SecondWindow:
         #Stworzenie i ustawienie frame dla widgetow 
 
         self.WidgetBarFrame = tk.Frame(self.second_gui)
-        self.WidgetBarFrame.place(x = 0, y = 30)
+        self.WidgetBarFrame.pack()
 
-        #Ustawienie pozycji 10 przycisków
-        def SetBarGrid(ButtonList):
-            for Button in ButtonList:
-                Button.pack(side = tk.LEFT)
+        self.ButtonList = ["Wklej", "Wytnij", "Kopiuj", "Zaznacz", "Zmień rozmiar", "Obróć", "Pędziel", "Kształty", "Wypełnienie", "Kolory", "Edytuj kolory"]
 
-        self.AllBarButton = [] ##Lista do której dodaje 10 przycisków, potrzebne do ustawienia pozycji
-
-        #Tworzenie 10 przycisków (funkcyjnych? Wiadomo o co chodzi :) )
-        for bb in range(10):
-            self.BarButton = tk.Button(self.WidgetBarFrame, text = "Opcja" + str(bb), width = 10, height = 3)
-            self.AllBarButton.append(self.BarButton)
-
-        SetBarGrid(self.AllBarButton) #Wywołanie komendy ustawenia przycisków
+        #Tworzenie glownych przyciskow
+        for bb in self.ButtonList:
+            if bb == "Kształty" or bb == "Kolory":
+                self.ShapesList = ["Koło", "Prostokąt", "Dupa"]
+                self.ColorList = ["Czerwony", "Zielony", "Niebieski"]
+                self.BarListbox = tk.Listbox(self.second_gui)
+                self.BarListbox.insert(1, self.ShapesList if bb == "Kształty" else self.ColorList)
+                self.BarListbox.pack()
+            else:
+                self.BarButton = tk.Button(self.WidgetBarFrame, text = str(bb), width = 11, height = 3)
+                self.BarButton.pack(side = tk.LEFT, padx = 3)
 
         #Stworzenie i ustawienie canvasa
-        self.canvas = tk.Canvas(second_gui, width = 800, height = 500, bg = "red")
-        self.canvas.place(x = 0, y = 85)
+        self.canvas = tk.Canvas(second_gui, width = 855, height = 500, bg = "red")
+        self.canvas.pack()
         
 ### Nie jestem pewien co to jest bo jak już pisałem musaiłem się wpomóc stackiem ale prawdopodobnie w tym miejscu aplikacja startuje 
 def main():
