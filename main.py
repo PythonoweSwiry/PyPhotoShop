@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import colorchooser
 
 #Klasa pierwszego, powitalnego okna
 class FirstWindow:
@@ -66,33 +67,62 @@ class SecondWindow:
         self.WidgetBarFrame = tk.Frame(self.second_gui)
         self.WidgetBarFrame.pack()
 
-        self.ButtonList = ["Wklej", "Wytnij", "Kopiuj", "Zaznacz", "Zmień rozmiar", "Obróć", "Pędziel", "Kształty", "Wypełnienie", "Kolory", "Edytuj kolory"]
+###################### IN-PROGRESS (szukam sposobu zeby to ustawic podobnie jak jest w paincie)
+
+        self.ButtonList = ["Wklej", "Wytnij", "Kopiuj", "Zaznacz", "Zmień rozmiar", "Obróć", "Pędziel", "Kształty", "Wypełnienie", "Edytuj kolory"]
+        self.ColorList = ["black", "grey", "red", "orange", "yellow", "green", "blue", "violet", "white", "grey80"]
+
+        def color(): #Aktywacja colorchosera
+            self.my_color = colorchooser.askcolor()
+
+        self.ListColorButton = [] #Lista potrzebna do ustawenia pozycji colorbutton
+
+        def SetColorGrid(NewLine = 2): #Ustawienie pozycji colorbuttons
+            self.row, self.col = 0,0
+            for button in self.ListColorButton:
+                button.grid(row = self.row, column = self.col)
+                self.row += 1
+                if self.row == NewLine:
+                    self.col += 1
+                    self.row = 0
+
+        #Frame dla list boxa żeby wszytko było w jednej lini
+        self.ListboxFrame = tk.Frame(self.WidgetBarFrame)
+        self.ListboxFrame.pack(side = tk.RIGHT, padx = 3)
+
+        #Frame dla colorbuttons żeby wszytko było w jednej lini
+        self.ColorFrame = tk.Frame(self.WidgetBarFrame)
+        self.ColorFrame.pack(side = tk.RIGHT, padx = 3)
 
         #Tworzenie glownych przyciskow
-        for bb in self.ButtonList:
-            if bb == "Kształty" or bb == "Kolory":
-                self.ShapesList = ["Koło", "Prostokąt", "Dupa"]
-                self.ColorList = ["Czerwony", "Zielony", "Niebieski"]
-                self.BarListbox = tk.Listbox(self.second_gui)
-                self.BarListbox.insert(1, self.ShapesList if bb == "Kształty" else self.ColorList)
-                self.BarListbox.pack()
-            else:
-                self.BarButton = tk.Button(self.WidgetBarFrame, text = str(bb), width = 11, height = 3)
-                self.BarButton.pack(side = tk.LEFT, padx = 3)
+        def AddButtonBar():
+            for bb in self.ButtonList:
+                if bb == "Kształty":
+                    self.ShapesList = ["Koło", "Prostokąt", "Dupa"]
+                    self.BarListbox = tk.Listbox(self.ListboxFrame, height=3)
+                    self.BarListbox.insert(1, self.ShapesList)
+                    self.BarListbox.pack()
+                else:
+                    self.BarButton = tk.Button(self.WidgetBarFrame, text = str(bb), width = 11, height = 3)
+                    self.BarButton.pack(side = tk.LEFT, padx = 3)
+                    self.BarButton.config(command = color if bb == "Edytuj kolory" else None)
+            for col in self.ColorList:
+                self.ColorButton = tk.Button(self.ColorFrame, background = col)
+                self.ListColorButton.append(self.ColorButton)
+        AddButtonBar() #Wywołanie funkcji do tworzenia przycisków 
+        SetColorGrid() #Wywołanie funkcji do pozycjonowania colorbuttons
+
+######################
 
         #Stworzenie i ustawienie canvasa
         self.canvas = tk.Canvas(second_gui, width = 855, height = 500, bg = "red")
         self.canvas.pack()
         
 ### Nie jestem pewien co to jest bo jak już pisałem musaiłem się wpomóc stackiem ale prawdopodobnie w tym miejscu aplikacja startuje 
-def main():
+if __name__ == '__main__':
     root = tk.Tk()
     app = FirstWindow(root)
     root.mainloop()
 ###
 
-###Wywołuje funkcje main ale po co i jak to działa to nie wiem, jak to usunąłem to program nie chciał ruszyć 
-if __name__ == '__main__':
-    main()
-###
 
