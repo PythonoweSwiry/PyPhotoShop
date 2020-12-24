@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import colorchooser
+from tkinter.filedialog import askopenfilename
 
 #Klasa pierwszego, powitalnego okna
 class FirstWindow:
@@ -37,6 +38,18 @@ class SecondWindow:
         self.second_gui.title("PyPhotoshop v1.0.0")
         # Dodanie ikony w lewym gornym rogu
         self.second_gui.wm_iconbitmap(bitmap = "camera.ico")
+        # Dodanie obiektu przechowującego obraz
+        self.img = tk.PhotoImage()
+
+
+        #Funkcje do lewego górnego menu tj. wybór zdjęcia, zapis płótna 
+        def SelectImage():
+            self.filename = askopenfilename( title='Select an image',
+                                            filetypes=[("png files", "*.png"), ("jpg files", "*.jpg"), ("jpeg files", "*.jpeg")])
+            self.img.config(file=self.filename)
+            self.canvas.create_image(0, 0, anchor='nw', image=self.img )
+            self.canvas.pack()
+
 
         def TopMenuBar(self):
             # Menu bar (Przycisku na samej górze)
@@ -45,7 +58,7 @@ class SecondWindow:
             self.FileOpctions = tk.Menu(self.MenuBar, tearoff = False) #Tworze menu opcji dla pierwszego przycisku
             self.FileOpctions.add_command(label="Nowy", command=lambda: print("Nowy plik")) #Opcja 1
             self.FileOpctions.add_command(label="Zapisz", command=lambda: print("Zapisano")) #Opcja 2
-            self.FileOpctions.add_command(label="Wczytaj", command=lambda: print("Wczytano")) #Opcja 3 
+            self.FileOpctions.add_command(label="Wczytaj", command=SelectImage ) #Opcja 3 
             self.FileOpctions.add_separator() #Linia oddzielajaca 
             self.FileOpctions.add_command(label="Wyjdz", command=self.second_gui.destroy) #Opcja 4
 
@@ -59,6 +72,7 @@ class SecondWindow:
             self.MenuBar.add_cascade(label = "Widok", menu = self.ZoomOpctions) #Tworze drugi przycisk i dodaje to co ma wykonać 
 
             self.second_gui.config(menu=self.MenuBar) #Podlaczenie calego menubar do drugiego okna
+
 
         TopMenuBar(self) #Wywołuje funkcje odpowiedzialna za MenuBar
 
