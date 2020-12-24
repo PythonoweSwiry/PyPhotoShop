@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import colorchooser
 from tkinter.filedialog import askopenfilename
+from PIL import ImageTk, Image
 
 #Klasa pierwszego, powitalnego okna
 class FirstWindow:
@@ -90,11 +91,21 @@ class SecondWindow:
             self.my_color = colorchooser.askcolor()
 
         self.ListColorButton = [] #Lista potrzebna do ustawenia pozycji colorbutton
+        self.SchapesList = [] #Lista potrzebna do ustawienia pozycji ShapesButton
 
         def SetColorGrid(NewLine = 2): #Ustawienie pozycji colorbuttons
             self.row, self.col = 0,0
             for button in self.ListColorButton:
                 button.grid(row = self.row, column = self.col)
+                self.row += 1
+                if self.row == NewLine:
+                    self.col += 1
+                    self.row = 0
+
+        def SetShapesGrid(NewLine = 2): #Ustawienie pozycji shapesbutton
+            self.row, self.col = 0,0
+            for SchapesButton in self.SchapesList:
+                SchapesButton.grid(row = self.row, column = self.col, padx = 3, pady = 3)
                 self.row += 1
                 if self.row == NewLine:
                     self.col += 1
@@ -108,14 +119,24 @@ class SecondWindow:
         self.ColorFrame = tk.Frame(self.WidgetBarFrame)
         self.ColorFrame.pack(side = tk.RIGHT, padx = 3)
 
+        #Frame dla schapesbuttons żeby wszytko było w jednej lini
+        self.SchapesFrame = tk.Frame(self.WidgetBarFrame)
+        self.SchapesFrame.pack(side = tk.RIGHT, padx = 3)
+
+        self.licznik = 0 # licznik do pętli, żeby wykonała sie tylko 4 razy
+        self.imglist = [ImageTk.PhotoImage(Image.open("Prosta.png")), ImageTk.PhotoImage(Image.open("Krzywa.png")), ImageTk.PhotoImage(Image.open("Elipsa.png")), ImageTk.PhotoImage(Image.open("Prostokąt.png"))] #Lista icon na schapebuttons
+
         #Tworzenie glownych przyciskow
         def AddButtonBar():
             for bb in self.ButtonList:
                 if bb == "Kształty":
-                    self.ShapesList = ["Koło", "Prostokąt", "Dupa"]
-                    self.BarListbox = tk.Listbox(self.ListboxFrame, height=3)
-                    self.BarListbox.insert(1, self.ShapesList)
-                    self.BarListbox.pack()
+                    for Schapes in ["Prosta", "Krzywa", "Elipsa", "Prostokąt"]:
+                        for img in self.imglist:
+                            self.SchapesButton = tk.Button(self.SchapesFrame, image = img)
+                            self.SchapesList.append(self.SchapesButton)
+                            self.licznik += 1
+                        if self.licznik == 4:
+                            break
                 else:
                     self.BarButton = tk.Button(self.WidgetBarFrame, text = str(bb), width = 11, height = 3)
                     self.BarButton.pack(side = tk.LEFT, padx = 3)
@@ -125,14 +146,14 @@ class SecondWindow:
                 self.ListColorButton.append(self.ColorButton)
         AddButtonBar() #Wywołanie funkcji do tworzenia przycisków 
         SetColorGrid() #Wywołanie funkcji do pozycjonowania colorbuttons
-
+        SetShapesGrid() #Wywołanie funkcji do pozycjonowania shapebuttons
 ######################
 
         #Stworzenie i ustawienie canvasa
         self.canvas = tk.Canvas(second_gui, width = 855, height = 500, bg = "red")
         self.canvas.pack()
         
-### Nie jestem pewien co to jest bo jak już pisałem musaiłem się wpomóc stackiem ale prawdopodobnie w tym miejscu aplikacja startuje 
+### Aplikacja tutaj startuje
 if __name__ == '__main__':
     root = tk.Tk()
     app = FirstWindow(root)
