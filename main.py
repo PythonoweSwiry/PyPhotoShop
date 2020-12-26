@@ -1,7 +1,8 @@
 import tkinter as tk
 import tkinter.ttk as ttk
 from tkinter import colorchooser
-from tkinter.filedialog import askopenfilename
+from tkinter import filedialog
+from tkinter import messagebox
 from PIL import ImageTk, Image
 
 #Klasa pierwszego, powitalnego okna
@@ -58,18 +59,33 @@ class SecondWindow:
 
         #Funkcje do lewego górnego menu tj. wybór zdjęcia, zapis płótna
         def SelectImage():
-            self.filename = askopenfilename( title='Select an image', filetypes=[("png files", "*.png"), ("jpg files", "*.jpg"), ("jpeg files", "*.jpeg")])
+            self.types = [("png", "*.png"), ("jpg", "*.jpg"), ("jpeg", "*.jpeg"), ("wszystkie", ["*.jpeg", "*.jpg", "*.png"])]
+            self.filename = filedialog.askopenfilename( title='Wczytaj obraz', filetypes=self.types )
             self.img.config(file=self.filename)
             self.canvas.create_image(0, 0, anchor='nw', image=self.img )
             self.canvas.pack()
+
+        def SaveCanvas():
+            self.filename = filedialog.asksaveasfilename( title = "Zapisz jako",
+                                 filetypes = [(".png", "*.png"), (".jpg","*.jpg")])   
+            self.canvas.postscript(file = self.filename + ".ps")
+            self.im = Image.open(self.filename + ".ps")
+            self.im.save(self.filename + ".png", "png")    #tu dodam tez jpg
+
+        def NewCanvas():
+            prompt = messagebox.askyesno(title = "Potwierdź", message = "Zapisać zmiany?")   #zwraca True False
+            if prompt == True:
+                SaveCanvas()
+            self.canvas.delete("all")
+            self.canvas.config( bg = "red" )
 
         def TopMenuBar(self):
             # Menu bar (Przycisku na samej górze)
             self.MenuBar = tk.Menu(self.second_gui)#Tworze miejsce do menu bar (Nie trzeba lokalizować bo jest tylko jedna możliwośc lokalizacji)
 
             self.FileOpctions = tk.Menu(self.MenuBar, tearoff = False) #Tworze menu opcji dla pierwszego przycisku
-            self.FileOpctions.add_command(label="Nowy", command=lambda: print("Nowy plik")) #Opcja 1
-            self.FileOpctions.add_command(label="Zapisz", command=lambda: print("Zapisano")) #Opcja 2
+            self.FileOpctions.add_command(label="Nowy", command=NewCanvas ) #Opcja 1
+            self.FileOpctions.add_command(label="Zapisz", command=SaveCanvas ) #Opcja 2
             self.FileOpctions.add_command(label="Wczytaj", command=SelectImage ) #Opcja 3
             self.FileOpctions.add_separator() #Linia oddzielajaca
             self.FileOpctions.add_command(label="Wyjdz", command=self.second_gui.destroy) #Opcja 4
