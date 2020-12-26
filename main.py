@@ -1,4 +1,5 @@
 import tkinter as tk
+import tkinter.ttk as ttk
 from tkinter import colorchooser
 from tkinter.filedialog import askopenfilename
 from PIL import ImageTk, Image
@@ -8,20 +9,33 @@ class FirstWindow:
     def __init__(self,first_gui):
         #Ustawienia okna
         self.first_gui = first_gui
-        self.first_gui.geometry("500x300")
+        # self.first_gui.geometry("500x300")
         self.first_gui.title("PyPhotoshop v1.0.0")
         # Dodanie ikony w lewym gornym rogu
         self.first_gui.wm_iconbitmap(bitmap = "camera.ico")
 
-        #Stworzenie i ustawienie frame, label i button
-        self.HelloFrame = tk.Frame(self.first_gui)
-        self.HelloFrame.pack(padx = 10, pady = 10)
+        #Frame dla canvasa i progressbara
+        self.ProgressFrame = tk.Frame(self.first_gui)
+        self.ProgressFrame.pack()
 
-        self.LabelHello = tk.Label(self.HelloFrame, text = "Witaj! Załącz plik do edycji", font = ("Arial", 20))
-        self.LabelHello.grid(row = 1, column = 1, pady = 40)
+        self.canvas = tk.Canvas(self.ProgressFrame, width = 735, height = 560) #Canvas dla zdjecia w tle
+        self.image = ImageTk.PhotoImage(file = "win1_background.png") 
+        self.canvas.create_image(0, 0, image = self.image, anchor= tk.NW) 
+        self.canvas.pack()
 
-        self.ButtonHello = tk.Button(self.HelloFrame, text = "Załącz", height = 3, width = 10, font = 10, command = self.NewWindow)
-        self.ButtonHello.grid(row = 5, column = 1, pady = 40)
+        #Progressbar na dole okna
+        self.Progress = ttk.Progressbar(self.ProgressFrame, orient = tk.HORIZONTAL, length = 500, mode = "determinate")
+        self.Progress.place(x = 100, y = 500)
+
+        #Funkcja do działania progressbaru
+        def bar(): 
+            import time 
+            for i in range(0,100,1):
+                self.Progress["value"] = i
+                self.ProgressFrame.update_idletasks()
+                time.sleep(0.02)
+            self.NewWindow()
+        bar()
 
     #Komenda do zmieny okna
     def NewWindow(self):
@@ -42,15 +56,12 @@ class SecondWindow:
         # Dodanie obiektu przechowującego obraz
         self.img = tk.PhotoImage()
 
-
         #Funkcje do lewego górnego menu tj. wybór zdjęcia, zapis płótna
         def SelectImage():
-            self.filename = askopenfilename( title='Select an image',
-                                            filetypes=[("png files", "*.png"), ("jpg files", "*.jpg"), ("jpeg files", "*.jpeg")])
+            self.filename = askopenfilename( title='Select an image', filetypes=[("png files", "*.png"), ("jpg files", "*.jpg"), ("jpeg files", "*.jpeg")])
             self.img.config(file=self.filename)
             self.canvas.create_image(0, 0, anchor='nw', image=self.img )
             self.canvas.pack()
-
 
         def TopMenuBar(self):
             # Menu bar (Przycisku na samej górze)
