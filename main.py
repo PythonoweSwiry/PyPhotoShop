@@ -13,7 +13,7 @@ class FirstWindow:
         # Dodanie ikony w lewym gornym rogu
         self.first_gui.wm_iconbitmap(bitmap = "camera.ico")
 
-        #Stworzenie i ustawienie frame, label i button 
+        #Stworzenie i ustawienie frame, label i button
         self.HelloFrame = tk.Frame(self.first_gui)
         self.HelloFrame.pack(padx = 10, pady = 10)
 
@@ -43,7 +43,7 @@ class SecondWindow:
         self.img = tk.PhotoImage()
 
 
-        #Funkcje do lewego górnego menu tj. wybór zdjęcia, zapis płótna 
+        #Funkcje do lewego górnego menu tj. wybór zdjęcia, zapis płótna
         def SelectImage():
             self.filename = askopenfilename( title='Select an image',
                                             filetypes=[("png files", "*.png"), ("jpg files", "*.jpg"), ("jpeg files", "*.jpeg")])
@@ -59,8 +59,8 @@ class SecondWindow:
             self.FileOpctions = tk.Menu(self.MenuBar, tearoff = False) #Tworze menu opcji dla pierwszego przycisku
             self.FileOpctions.add_command(label="Nowy", command=lambda: print("Nowy plik")) #Opcja 1
             self.FileOpctions.add_command(label="Zapisz", command=lambda: print("Zapisano")) #Opcja 2
-            self.FileOpctions.add_command(label="Wczytaj", command=SelectImage ) #Opcja 3 
-            self.FileOpctions.add_separator() #Linia oddzielajaca 
+            self.FileOpctions.add_command(label="Wczytaj", command=SelectImage ) #Opcja 3
+            self.FileOpctions.add_separator() #Linia oddzielajaca
             self.FileOpctions.add_command(label="Wyjdz", command=self.second_gui.destroy) #Opcja 4
 
             self.ZoomOpctions = tk.Menu(self.MenuBar, tearoff = False) #Tworze menu opcji dla drugiego przycisku
@@ -69,24 +69,23 @@ class SecondWindow:
             self.ZoomOpctions.add_command(label="Oddal", command=lambda: print("Oddalono")) #Opcja 2
             self.ZoomOpctions.add_command(label="Pełen obraz", command=lambda: print("Pełen obraz")) #Opcja 3
 
-            self.MenuBar.add_cascade(label = "Opcje", menu = self.FileOpctions) #Tworze pierwszy przycisk i dodaje to co ma wykonać 
-            self.MenuBar.add_cascade(label = "Widok", menu = self.ZoomOpctions) #Tworze drugi przycisk i dodaje to co ma wykonać 
+            self.MenuBar.add_cascade(label = "Opcje", menu = self.FileOpctions) #Tworze pierwszy przycisk i dodaje to co ma wykonać
+            self.MenuBar.add_cascade(label = "Widok", menu = self.ZoomOpctions) #Tworze drugi przycisk i dodaje to co ma wykonać
 
             self.second_gui.config(menu=self.MenuBar) #Podlaczenie calego menubar do drugiego okna
 
 
         TopMenuBar(self) #Wywołuje funkcje odpowiedzialna za MenuBar
 
-        #Stworzenie i ustawienie frame dla widgetow 
+        #Stworzenie i ustawienie frame dla widgetow
 
         self.WidgetBarFrame = tk.Frame(self.second_gui)
         self.WidgetBarFrame.pack()
 
 ###################### IN-PROGRESS (szukam sposobu zeby to ustawic podobnie jak jest w paincie)
 
-        self.ButtonList = ["Wklej", "Wytnij", "Kopiuj", "Zaznacz", "Zmień rozmiar", "Obróć", "Pędziel", "Kształty", "Wypełnienie", "Edytuj kolory"]
-        self.ColorList = ["black", "grey", "red", "orange", "yellow", "green", "blue", "violet", "white", "grey80"]
-
+        self.ButtonList = ["Wklej", "Wytnij", "Kopiuj", "Zaznacz", "Zmień rozmiar", "Obróć", "Pędzel", "Kształty", "Wypełnienie", "Edytuj kolory"]
+        self.ColorList = ["white", "olive", "yellow", "green", "orange", "blue", "red", "grey80", "violet", "grey", "purple", "black", "pink", "brown"]
         def color(): #Aktywacja colorchosera
             self.my_color = colorchooser.askcolor()
 
@@ -124,18 +123,21 @@ class SecondWindow:
         self.SchapesFrame.pack(side = tk.RIGHT, padx = 3)
 
         self.licznik = 0 # licznik do pętli, żeby wykonała sie tylko 4 razy
-        self.imglist = [ImageTk.PhotoImage(Image.open("Prosta.png")), ImageTk.PhotoImage(Image.open("Krzywa.png")), ImageTk.PhotoImage(Image.open("Elipsa.png")), ImageTk.PhotoImage(Image.open("Prostokąt.png"))] #Lista icon na schapebuttons
+        self.imglist = [ImageTk.PhotoImage(Image.open("Prosta.png")), ImageTk.PhotoImage(Image.open("Krzywa.png")),
+        ImageTk.PhotoImage(Image.open("Elipsa.png")), ImageTk.PhotoImage(Image.open("Prostokąt.png")),
+        ImageTk.PhotoImage(Image.open("Serce.png")), ImageTk.PhotoImage(Image.open("Gwiazda.png"))]
+        #Lista icon na schapebuttons
 
         #Tworzenie glownych przyciskow
         def AddButtonBar():
             for bb in self.ButtonList:
                 if bb == "Kształty":
-                    for Schapes in ["Prosta", "Krzywa", "Elipsa", "Prostokąt"]:
+                    for Schapes in ["Prosta", "Krzywa", "Elipsa", "Prostokąt", "Serce", "Gwiazda"]:
                         for img in self.imglist:
                             self.SchapesButton = tk.Button(self.SchapesFrame, image = img)
                             self.SchapesList.append(self.SchapesButton)
                             self.licznik += 1
-                        if self.licznik == 4:
+                        if self.licznik == 6:
                             break
                 else:
                     self.BarButton = tk.Button(self.WidgetBarFrame, text = str(bb), width = 11, height = 3)
@@ -144,7 +146,7 @@ class SecondWindow:
             for col in self.ColorList:
                 self.ColorButton = tk.Button(self.ColorFrame, background = col)
                 self.ListColorButton.append(self.ColorButton)
-        AddButtonBar() #Wywołanie funkcji do tworzenia przycisków 
+        AddButtonBar() #Wywołanie funkcji do tworzenia przycisków
         SetColorGrid() #Wywołanie funkcji do pozycjonowania colorbuttons
         SetShapesGrid() #Wywołanie funkcji do pozycjonowania shapebuttons
 ######################
@@ -152,12 +154,11 @@ class SecondWindow:
         #Stworzenie i ustawienie canvasa
         self.canvas = tk.Canvas(second_gui, width = 855, height = 500, bg = "red")
         self.canvas.pack()
-        
+
 ### Aplikacja tutaj startuje
 if __name__ == '__main__':
     root = tk.Tk()
     app = FirstWindow(root)
     root.mainloop()
 ###
-
 
