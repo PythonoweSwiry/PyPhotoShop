@@ -1,7 +1,8 @@
 import tkinter as tk
 import tkinter.ttk as ttk
 from tkinter import colorchooser
-from tkinter.filedialog import askopenfilename
+from tkinter import filedialog
+from tkinter import messagebox
 from PIL import ImageTk, Image
 
 #Klasa pierwszego, powitalnego okna
@@ -40,9 +41,39 @@ class FirstWindow:
     #Komenda do zmieny okna
     def NewWindow(self):
             self.first_gui.destroy() #Usunięcie pierwszego ona
-            self.second_gui = tk.Tk() #Stworzenie drugiego okna
-            self.app = SecondWindow(self.second_gui) #Wywołanie drugiego ona? Nie do końca wiem bo musiałem się wspomóc stackoverflow
-            self.second_gui.mainloop()
+            self.master = tk.Tk() #Stworzenie drugiego okna
+            self.app = InputWindow(self.master) #Wywołanie drugiego ona? Nie do końca wiem bo musiałem się wspomóc stackoverflow
+            self.master.mainloop()
+
+class InputWindow(FirstWindow):
+    def __init__(self, master):
+        self.master = master
+        self.master.config(bg ="#252526")
+
+        self.NameLabel = tk.Label(self.master, text = "PyPhotoshop 2020", font = ("Arial", 25), bg = "#252526", fg = "#eeeee8")
+        self.NameLabel.grid(row = 0, column = 0, padx = 20, pady = 20)
+
+        def LeftSide(self):
+            self.InfoLabel = tk.Label(self.master, text = "Otwórz ostatnio używane", font = ("Arial", 15), bg = "#252526", fg = "#eeeee8")
+            self.InfoLabel.grid(row = 1, column = 0)
+
+        def RightSide(self):
+            self.InputLabel = tk.Label(self.master, text = "Rozpocznij", font = ("Arial", 15), bg = "#252526", fg = "#eeeee8")
+            self.InputLabel.grid(row = 1, column = 1, padx = 5, pady = 8)
+            self.InputFrame = tk.Frame(self.master, bg = "#252526")
+            self.InputFrame.grid(row = 2, column = 1, padx = 20)
+            for button in ["dysk lokalny", "chumry", "Nowy"]:
+                self.InputButton = tk.Button(self.InputFrame, width = 30, height = 5 , bg = "#3f3f40", fg = "#eeeee8", text = button if button == "Nowy" else "Wczytaj plik z " + button, command = self.NewWindow())
+                self.InputButton.pack(pady = 2)
+
+        RightSide(self)
+        LeftSide(self)
+
+    def NewWindow(self):
+        self.master.destroy() #Usunięcie pierwszego ona
+        self.second_gui = tk.Tk() #Stworzenie drugiego okna
+        self.app = SecondWindow(self.second_gui) #Wywołanie drugiego ona? Nie do końca wiem bo musiałem się wspomóc stackoverflow
+        self.second_gui.mainloop()
 
 #Klasa drugiego okna "Głównego"
 class SecondWindow:
@@ -58,18 +89,33 @@ class SecondWindow:
 
         #Funkcje do lewego górnego menu tj. wybór zdjęcia, zapis płótna
         def SelectImage():
-            self.filename = askopenfilename( title='Select an image', filetypes=[("png files", "*.png"), ("jpg files", "*.jpg"), ("jpeg files", "*.jpeg")])
+            self.types = [("png", "*.png"), ("jpg", "*.jpg"), ("jpeg", "*.jpeg"), ("wszystkie", ["*.jpeg", "*.jpg", "*.png"])]
+            self.filename = filedialog.askopenfilename( title='Wczytaj obraz', filetypes=self.types )
             self.img.config(file=self.filename)
             self.canvas.create_image(0, 0, anchor='nw', image=self.img )
             self.canvas.pack()
+
+        def SaveCanvas():
+            self.filename = filedialog.asksaveasfilename( title = "Zapisz jako",
+                                 filetypes = [(".png", "*.png"), (".jpg","*.jpg")])   
+            self.canvas.postscript(file = self.filename + ".ps")
+            self.im = Image.open(self.filename + ".ps")
+            self.im.save(self.filename + ".png", "png")    #tu dodam tez jpg
+
+        def NewCanvas():
+            prompt = messagebox.askyesno(title = "Potwierdź", message = "Zapisać zmiany?")   #zwraca True False
+            if prompt == True:
+                SaveCanvas()
+            self.canvas.delete("all")
+            self.canvas.config( bg = "red" )
 
         def TopMenuBar(self):
             # Menu bar (Przycisku na samej górze)
             self.MenuBar = tk.Menu(self.second_gui)#Tworze miejsce do menu bar (Nie trzeba lokalizować bo jest tylko jedna możliwośc lokalizacji)
 
             self.FileOpctions = tk.Menu(self.MenuBar, tearoff = False) #Tworze menu opcji dla pierwszego przycisku
-            self.FileOpctions.add_command(label="Nowy", command=lambda: print("Nowy plik")) #Opcja 1
-            self.FileOpctions.add_command(label="Zapisz", command=lambda: print("Zapisano")) #Opcja 2
+            self.FileOpctions.add_command(label="Nowy", command=NewCanvas ) #Opcja 1
+            self.FileOpctions.add_command(label="Zapisz", command=SaveCanvas ) #Opcja 2
             self.FileOpctions.add_command(label="Wczytaj", command=SelectImage ) #Opcja 3
             self.FileOpctions.add_separator() #Linia oddzielajaca
             self.FileOpctions.add_command(label="Wyjdz", command=self.second_gui.destroy) #Opcja 4
@@ -172,4 +218,3 @@ if __name__ == '__main__':
     app = FirstWindow(root)
     root.mainloop()
 ###
-
