@@ -41,39 +41,36 @@ class FirstWindow:
     #Komenda do zmieny okna
     def NewWindow(self):
             self.first_gui.destroy() #Usunięcie pierwszego ona
-            self.master = tk.Tk() #Stworzenie drugiego okna
-            self.app = InputWindow(self.master) #Wywołanie drugiego ona? Nie do końca wiem bo musiałem się wspomóc stackoverflow
-            self.master.mainloop()
+            self.input_gui = tk.Tk() #Stworzenie drugiego okna
+            self.app = InputWindow(self.input_gui) #Wywołanie drugiego ona? Nie do końca wiem bo musiałem się wspomóc stackoverflow
 
-class InputWindow(FirstWindow):
-    def __init__(self, master):
-        self.master = master
-        self.master.config(bg ="#252526")
+class InputWindow:
+    def __init__(self, input_gui):
+        self.input_gui = input_gui
+        self.input_gui.config(bg ="#252526")
 
-        self.NameLabel = tk.Label(self.master, text = "PyPhotoshop 2020", font = ("Arial", 25), bg = "#252526", fg = "#eeeee8")
+        self.NameLabel = tk.Label(self.input_gui, text = "PyPhotoshop 2020", font = ("Arial", 25), bg = "#252526", fg = "#eeeee8")
         self.NameLabel.grid(row = 0, column = 0, padx = 20, pady = 20)
+        self.widget()
 
-        def LeftSide(self):
-            self.InfoLabel = tk.Label(self.master, text = "Otwórz ostatnio używane", font = ("Arial", 15), bg = "#252526", fg = "#eeeee8")
-            self.InfoLabel.grid(row = 1, column = 0)
+    def widget(self):
+        self.InfoLabel = tk.Label(self.input_gui, text = "Otwórz ostatnio używane", font = ("Arial", 15), bg = "#252526", fg = "#eeeee8")
+        self.InfoLabel.grid(row = 1, column = 0)
 
-        def RightSide(self):
-            self.InputLabel = tk.Label(self.master, text = "Rozpocznij", font = ("Arial", 15), bg = "#252526", fg = "#eeeee8")
-            self.InputLabel.grid(row = 1, column = 1, padx = 5, pady = 8)
-            self.InputFrame = tk.Frame(self.master, bg = "#252526")
-            self.InputFrame.grid(row = 2, column = 1, padx = 20)
-            for button in ["dysk lokalny", "chumry", "Nowy"]:
-                self.InputButton = tk.Button(self.InputFrame, width = 30, height = 5 , bg = "#3f3f40", fg = "#eeeee8", text = button if button == "Nowy" else "Wczytaj plik z " + button, command = self.NewWindow())
-                self.InputButton.pack(pady = 2)
+        self.InputLabel = tk.Label(self.input_gui, text = "Rozpocznij", font = ("Arial", 15), bg = "#252526", fg = "#eeeee8")
+        self.InputLabel.grid(row = 1, column = 1, padx = 5, pady = 8)
 
-        RightSide(self)
-        LeftSide(self)
+        self.InputFrame = tk.Frame(self.input_gui, bg = "#252526")
+        self.InputFrame.grid(row = 2, column = 1, padx = 20)
+        
+        for button in ["dysk lokalny", "chumry", "Nowy"]:
+            self.InputButton = tk.Button(self.InputFrame, width = 30, height = 5 , bg = "#3f3f40", fg = "#eeeee8", text = button if button == "Nowy" else "Wczytaj plik z " + button, command = self.NewWindow)
+            self.InputButton.pack(pady = 2)
 
     def NewWindow(self):
-        self.master.destroy() #Usunięcie pierwszego ona
+        self.input_gui.destroy() #Usunięcie pierwszego ona
         self.second_gui = tk.Tk() #Stworzenie drugiego okna
         self.app = SecondWindow(self.second_gui) #Wywołanie drugiego ona? Nie do końca wiem bo musiałem się wspomóc stackoverflow
-        self.second_gui.mainloop()
 
 #Klasa drugiego okna "Głównego"
 class SecondWindow:
