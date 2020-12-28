@@ -14,7 +14,9 @@ class FirstWindow:
         self.first_gui.title("PyPhotoshop v1.0.0")
         # Dodanie ikony w lewym gornym rogu
         self.first_gui.wm_iconbitmap(bitmap = "camera.ico")
+        self.widget()
 
+    def widget(self):
         #Frame dla canvasa i progressbara
         self.ProgressFrame = tk.Frame(self.first_gui)
         self.ProgressFrame.pack()
@@ -57,15 +59,21 @@ class InputWindow:
         self.InfoLabel = tk.Label(self.input_gui, text = "Otwórz ostatnio używane", font = ("Arial", 15), bg = "#252526", fg = "#eeeee8")
         self.InfoLabel.grid(row = 1, column = 0)
 
-        self.InputLabel = tk.Label(self.input_gui, text = "Rozpocznij", font = ("Arial", 15), bg = "#252526", fg = "#eeeee8")
+        self.InputLabel = tk.Label(self.input_gui, text = "Rozpocznij", font = ("Arial 15 "), bg = "#252526", fg = "#eeeee8")
         self.InputLabel.grid(row = 1, column = 1, padx = 5, pady = 8)
 
         self.InputFrame = tk.Frame(self.input_gui, bg = "#252526")
         self.InputFrame.grid(row = 2, column = 1, padx = 20)
         
-        for button in ["dysk lokalny", "chumry", "Nowy"]:
-            self.InputButton = tk.Button(self.InputFrame, width = 30, height = 5 , bg = "#3f3f40", fg = "#eeeee8", text = button if button == "Nowy" else "Wczytaj plik z " + button, command = self.NewWindow)
+        self.local_disc, self.cloud, self.new = tk.PhotoImage(file = "local_disc.png"), tk.PhotoImage(file = "cloud.png"), tk.PhotoImage(file = "new.png")
+
+        def button(self, text, img):
+            self.InputButton = tk.Button(self.InputFrame, bg = "#3f3f40", fg = "#eeeee8", text = text, command = self.NewWindow, image = img, compound = tk.LEFT, width = 200, height = 50, font = "Arial 9 bold")
             self.InputButton.pack(pady = 2)
+        
+        button(self, "Wczytaj plik z dysku lokalnego", self.local_disc)
+        button(self, "Wczytaj plik z chmury", self.cloud)
+        button(self, "Nowy", self.new)
 
     def NewWindow(self):
         self.input_gui.destroy() #Usunięcie pierwszego ona
@@ -83,7 +91,9 @@ class SecondWindow:
         self.second_gui.wm_iconbitmap(bitmap = "camera.ico")
         # Dodanie obiektu przechowującego obraz
         self.img = tk.PhotoImage()
+        self.widget()
 
+    def widget(self):
         #Funkcje do lewego górnego menu tj. wybór zdjęcia, zapis płótna
         def SelectImage():
             self.types = [("png", "*.png"), ("jpg", "*.jpg"), ("jpeg", "*.jpeg"), ("wszystkie", ["*.jpeg", "*.jpg", "*.png"])]
@@ -206,7 +216,7 @@ class SecondWindow:
 ######################
 
         #Stworzenie i ustawienie canvasa
-        self.canvas = tk.Canvas(second_gui, width = 855, height = 500, bg = "red")
+        self.canvas = tk.Canvas(self.second_gui, width = 855, height = 500, bg = "red")
         self.canvas.pack()
 
 ### Aplikacja tutaj startuje
