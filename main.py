@@ -4,6 +4,7 @@ from tkinter import colorchooser
 from tkinter import filedialog
 from tkinter import messagebox
 from PIL import ImageTk, Image
+import os
 
 #Klasa pierwszego, powitalnego okna
 class FirstWindow:
@@ -116,15 +117,22 @@ class SecondWindow:
             self.canvas.create_image(0, 0, anchor='nw', image=self.img )
             self.canvas.pack()
 
+        # Wymagania systemowe:
+        # 1. instalacja ghostscript dla waszej wersji systemu:       https://www.ghostscript.com/download/gsdnld.html
+        # 2. dodanie do ścieżki linijki (tutaj w zależnosci jaką wersję gs macie pobraną):       C:\Program Files\gs\gs9.53.3\bin\   
         def SaveCanvas():
-            self.filename = filedialog.asksaveasfilename( title = "Zapisz jako",
-                                 filetypes = [(".png", "*.png"), (".jpg","*.jpg")])   
-            self.canvas.postscript(file = self.filename + ".ps")
-            self.im = Image.open(self.filename + ".ps")
-            self.im.save(self.filename + ".png", "png")    #tu dodam tez jpg
+            width, height = self.canvas.winfo_width(), self.canvas.winfo_height()
+            self.filename = filedialog.asksaveasfilename( title = "Zapisz jako", filetypes = [(".png", "*.png")])  
+            self.canvas.postscript( file = self.filename + ".eps" )
+            self.img_before = Image.open( self.filename + ".eps" )
+            self.img_after = self.img_before.convert( "RGBA" )
+            self.img_after = self.img_after.resize( (width, height), Image.ANTIALIAS )
+            self.img_after.save( self.filename + ".png", lossless = True)
+            self.img_before.close()
+            os.remove( self.filename + ".eps" )      
 
         def NewCanvas():
-            prompt = messagebox.askyesno(title = "Potwierdź", message = "Zapisać zmiany?")   #zwraca True False
+            prompt = messagebox.askyesno(title = "Potwierdź", message = "Przed wyjściem zapisać zmiany?")   #zwraca True False
             if prompt == True:
                 SaveCanvas()
             self.canvas.delete("all")
