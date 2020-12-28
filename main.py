@@ -50,12 +50,26 @@ class InputWindow:
     def __init__(self, input_gui):
         self.input_gui = input_gui
         self.input_gui.config(bg ="#252526")
-
-        self.NameLabel = tk.Label(self.input_gui, text = "PyPhotoshop 2020", font = ("Arial", 25), bg = "#252526", fg = "#eeeee8")
-        self.NameLabel.grid(row = 0, column = 0, padx = 20, pady = 20)
         self.widget()
 
     def widget(self):
+
+        self.NameLabel = tk.Label(self.input_gui, text = "PyPhotoshop 2020", font = ("Arial", 25), bg = "#252526", fg = "#eeeee8")
+        self.NameLabel.grid(row = 0, column = 0, padx = 20, pady = 20)
+
+        def Theme():
+            def theme():
+                button.config(image = night, command = theme1, bg = "#3f3f40")
+            def theme1():
+                button.config(image = day, command = theme, bg = "white")
+
+            day = tk.PhotoImage(file = "sun.png")
+            night = tk.PhotoImage(file = "islam.png")
+
+            button = tk.Button(self.input_gui, image = day, command = theme, relief = tk.FLAT)
+            button.grid(row = 0, column = 1)
+        Theme()
+
         self.InfoLabel = tk.Label(self.input_gui, text = "Otwórz ostatnio używane", font = ("Arial", 15), bg = "#252526", fg = "#eeeee8")
         self.InfoLabel.grid(row = 1, column = 0)
 
@@ -68,7 +82,7 @@ class InputWindow:
         self.local_disc, self.cloud, self.new = tk.PhotoImage(file = "local_disc.png"), tk.PhotoImage(file = "cloud.png"), tk.PhotoImage(file = "new.png")
 
         def button(self, text, img):
-            self.InputButton = tk.Button(self.InputFrame, bg = "#3f3f40", fg = "#eeeee8", text = text, command = self.NewWindow, image = img, compound = tk.LEFT, width = 200, height = 50, font = "Arial 9 bold")
+            self.InputButton = tk.Button(self.InputFrame, bg = "#3f3f40", fg = "#eeeee8", text = text, command = self.NewWindow, image = img, compound = tk.LEFT, width = 200, height = 50, font = "Arial 9 bold", relief = tk.FLAT)
             self.InputButton.pack(pady = 2)
         
         button(self, "Wczytaj plik z dysku lokalnego", self.local_disc)
@@ -133,8 +147,11 @@ class SecondWindow:
             self.ZoomOpctions.add_command(label="Oddal", command=lambda: print("Oddalono")) #Opcja 2
             self.ZoomOpctions.add_command(label="Pełen obraz", command=lambda: print("Pełen obraz")) #Opcja 3
 
+            self.ThemeOpctions = tk.Menu(self.MenuBar, tearoff = False)
+
             self.MenuBar.add_cascade(label = "Opcje", menu = self.FileOpctions) #Tworze pierwszy przycisk i dodaje to co ma wykonać
             self.MenuBar.add_cascade(label = "Widok", menu = self.ZoomOpctions) #Tworze drugi przycisk i dodaje to co ma wykonać
+            self.MenuBar.add_cascade(label = "Motyw", menu = self.ThemeOpctions) #Tworze trzeci przycisk i dodaje to co ma wykonać
 
             self.second_gui.config(menu=self.MenuBar) #Podlaczenie calego menubar do drugiego okna
 
