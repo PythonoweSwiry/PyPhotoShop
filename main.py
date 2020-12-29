@@ -1,8 +1,9 @@
 import tkinter as tk
 import tkinter.ttk as ttk
-from tkinter import colorchooser
-from tkinter import filedialog
-from tkinter import messagebox
+#zaimportowlaismy cały moduł więc nie widze potrzeby importowania poniższych osobbno?
+# from tkinter import colorchooser
+# from tkinter import filedialog
+# from tkinter import messagebox
 from PIL import ImageTk, Image
 import os
 
@@ -23,8 +24,8 @@ class FirstWindow:
         self.ProgressFrame.pack()
 
         self.canvas = tk.Canvas(self.ProgressFrame, width = 735, height = 560) #Canvas dla zdjecia w tle
-        self.image = ImageTk.PhotoImage(file = "win1_background.png") 
-        self.canvas.create_image(0, 0, image = self.image, anchor= tk.NW) 
+        self.image = ImageTk.PhotoImage(file = "win1_background.png")
+        self.canvas.create_image(0, 0, image = self.image, anchor= tk.NW)
         self.canvas.pack()
 
         #Progressbar na dole okna
@@ -32,8 +33,8 @@ class FirstWindow:
         self.Progress.place(x = 100, y = 500)
 
         #Funkcja do działania progressbaru
-        def bar(): 
-            import time 
+        def bar():
+            import time
             for i in range(0,100,1):
                 self.Progress["value"] = i
                 self.ProgressFrame.update_idletasks()
@@ -79,13 +80,13 @@ class InputWindow:
 
         self.InputFrame = tk.Frame(self.input_gui, bg = "#252526")
         self.InputFrame.grid(row = 2, column = 1, padx = 20)
-        
+
         self.local_disc, self.cloud, self.new = tk.PhotoImage(file = "local_disc.png"), tk.PhotoImage(file = "cloud.png"), tk.PhotoImage(file = "new.png")
 
         def button(self, text, img):
             self.InputButton = tk.Button(self.InputFrame, bg = "#3f3f40", fg = "#eeeee8", text = text, command = self.NewWindow, image = img, compound = tk.LEFT, width = 200, height = 50, font = "Arial 9 bold", relief = tk.FLAT)
             self.InputButton.pack(pady = 2)
-        
+
         button(self, "Wczytaj plik z dysku lokalnego", self.local_disc)
         button(self, "Wczytaj plik z chmury", self.cloud)
         button(self, "Nowy", self.new)
@@ -125,17 +126,17 @@ class SecondWindow:
 
         # Wymagania systemowe:
         # 1. instalacja ghostscript dla waszej wersji systemu:       https://www.ghostscript.com/download/gsdnld.html
-        # 2. dodanie do ścieżki linijki (tutaj w zależnosci jaką wersję gs macie pobraną):       C:\Program Files\gs\gs9.53.3\bin\   
+        # 2. dodanie do ścieżki linijki (tutaj w zależnosci jaką wersję gs macie pobraną):       C:\Program Files\gs\gs9.53.3\bin\
         def SaveCanvas():
             width, height = self.canvas.winfo_width(), self.canvas.winfo_height()
-            self.filename = filedialog.asksaveasfilename( title = "Zapisz jako", filetypes = [(".png", "*.png")])  
+            self.filename = filedialog.asksaveasfilename( title = "Zapisz jako", filetypes = [(".png", "*.png")])
             self.canvas.postscript( file = self.filename + ".eps" )
             self.img_before = Image.open( self.filename + ".eps" )
             self.img_after = self.img_before.convert( "RGBA" )
             self.img_after = self.img_after.resize( (width, height), Image.ANTIALIAS )
             self.img_after.save( self.filename + ".png", lossless = True)
             self.img_before.close()
-            os.remove( self.filename + ".eps" )      
+            os.remove( self.filename + ".eps" )
 
         def NewCanvas():
             prompt = messagebox.askyesno(title = "Potwierdź", message = "Przed wyjściem zapisać zmiany?")   #zwraca True False
@@ -234,6 +235,9 @@ class SecondWindow:
                             self.licznik += 1
                         if self.licznik == 6:
                             break
+                elif bb == "Pędzel":
+                    self.BarButton = tk.Button(self.WidgetBarFrame, text='Pędzel', width = 11, height = 3, command=self.setup)
+                    self.BarButton.pack(side = tk.LEFT, padx = 3)
                 else:
                     self.BarButton = tk.Button(self.WidgetBarFrame, text = str(bb), width = 11, height = 3)
                     self.BarButton.pack(side = tk.LEFT, padx = 3)
@@ -249,6 +253,43 @@ class SecondWindow:
         #Stworzenie i ustawienie canvasa
         self.canvas = tk.Canvas(self.second_gui, width = 855, height = 500, bg = "red")
         self.canvas.pack()
+
+
+#FUNKCJA RYSOWANIA - POCZATEK - aktywacja przycisku ,,Pędzel"
+
+    DEFAULT_PEN_SIZE = 5.0 #Tutaj można wstawić wybór grubości pisaka
+    DEFAULT_COLOR = 'black' #Póżniej bd można wstawić tutaj wybór kolorów
+
+    def setup(self):
+        self.old_x, self.old_y = None, None #definicja poczatkowa wspolrzednych
+        self.color = self.DEFAULT_COLOR #definicja koloru pisaka
+        self.active_button = self.BarButton
+        self.canvas.bind('<B1-Motion>', self.paint) #wybór klawisza myszy <B1-Motion>, <B2-Motion>, <B3-Motion>.
+        #widget.bind(event, handler) the "handler" function is called with an event object. describing the event.
+        self.canvas.bind('<ButtonRelease-1>', self.reset)#wyór klawisza myszy<ButtonRelease-1>, <ButtonRelease-2>, and <ButtonRelease-3>.
+
+    def use_pen(self):
+        self.activate_button(self.BarButton)
+
+    def activate_button(self, some_button):
+        self.active_button.config(relief=RAISED) #relief - styl widżetu (FLAT, RAISED, SUNKEN, GROOVE, RIDGE)
+    #     some_button.config(relief=SUNKEN)
+        self.some_button = active_button
+
+    def paint(self, event): #rysowanie linii
+        paint_color = self.color
+        if self.old_x and self.old_y:
+            self.canvas.create_line(self.old_x, self.old_y, event.x, event.y,
+                               fill=paint_color)
+                               #ROUND - zokraglone brzegi, SMOOTT - true - spine false - łamana
+        self.old_x = event.x
+        self.old_y = event.y
+
+    def reset(self, event):
+        self.old_x, self.old_y = None, None
+##FUNKCJA RYSOWANIA - koniec
+
+
 
 ### Aplikacja tutaj startuje
 if __name__ == '__main__':
