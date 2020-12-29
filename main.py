@@ -111,10 +111,16 @@ class SecondWindow:
     def widget(self):
         #Funkcje do lewego górnego menu tj. wybór zdjęcia, zapis płótna
         def SelectImage():
+            width, height = self.canvas.winfo_reqwidth(), self.canvas.winfo_reqheight()
             self.types = [("png", "*.png"), ("jpg", "*.jpg"), ("jpeg", "*.jpeg"), ("wszystkie", ["*.jpeg", "*.jpg", "*.png"])]
             self.filename = filedialog.askopenfilename( title='Wczytaj obraz', filetypes=self.types )
-            self.img.config(file=self.filename)
-            self.canvas.create_image(0, 0, anchor='nw', image=self.img )
+            self.pilImage = Image.open( self.filename )
+            if self.pilImage.width > width:
+                self.pilImage = self.pilImage.resize( (width, int(self.pilImage.height/self.pilImage.width * width)), Image.ANTIALIAS )
+            if self.pilImage.height > height:
+                self.pilImage = self.pilImage.resize( (int(self.pilImage.width/self.pilImage.height * height), height), Image.ANTIALIAS )
+            self.TkImage = ImageTk.PhotoImage( image = self.pilImage )
+            self.canvas.create_image(0, 0, anchor="nw" , image = self.TkImage )
             self.canvas.pack()
 
         # Wymagania systemowe:
