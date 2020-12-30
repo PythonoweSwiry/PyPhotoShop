@@ -152,9 +152,10 @@ class InputWindow:
 
 #Klasa drugiego okna "Głównego"
 class SecondWindow:
-    def __init__(self, second_gui):
+    def __init__(self, second_gui,):
         #Ustawenia okna
         self.second_gui = second_gui
+        self.second_gui.config(bg ="#252526")
         # self.second_gui.geometry("804x589")
         self.second_gui.title("PyPhotoshop v1.0.0")
         # Dodanie ikony w lewym gornym rogu
@@ -204,9 +205,18 @@ class SecondWindow:
             self.MenuBar = tk.Menu(self.second_gui)#Tworze miejsce do menu bar (Nie trzeba lokalizować bo jest tylko jedna możliwośc lokalizacji)
 
             self.FileOpctions = tk.Menu(self.MenuBar, tearoff = False) #Tworze menu opcji dla pierwszego przycisku
+            self.MenuBar.add_cascade(label = "Opcje", menu = self.FileOpctions)
+
             self.FileOpctions.add_command(label="Nowy", command=NewCanvas ) #Opcja 1
             self.FileOpctions.add_command(label="Zapisz", command=SaveCanvas ) #Opcja 2
             self.FileOpctions.add_command(label="Wczytaj", command=SelectImage ) #Opcja 3
+            self.FileOpctions.add_separator() #Linia oddzielajaca
+
+            self.Theme = tk.Menu(self.FileOpctions, tearoff = False)
+            self.FileOpctions.add_cascade(label = "Motyw", menu = self.Theme)
+            self.Theme.add_radiobutton(label = "Ciemny")
+            self.Theme.add_radiobutton(label = "Jasny")
+
             self.FileOpctions.add_separator() #Linia oddzielajaca
             self.FileOpctions.add_command(label="Wyjdz", command=self.second_gui.destroy) #Opcja 4
 
@@ -216,11 +226,12 @@ class SecondWindow:
             self.ZoomOpctions.add_command(label="Oddal", command=lambda: print("Oddalono")) #Opcja 2
             self.ZoomOpctions.add_command(label="Pełen obraz", command=lambda: print("Pełen obraz")) #Opcja 3
 
-            self.ThemeOpctions = tk.Menu(self.MenuBar, tearoff = False)
+            # self.ThemeOpctions = tk.Menu(self.MenuBar, tearoff = False)
 
-            self.MenuBar.add_cascade(label = "Opcje", menu = self.FileOpctions) #Tworze pierwszy przycisk i dodaje to co ma wykonać
+            # self.FileOpctions.add_cascade(label = "Ciemny", menu = self.FileOpctions, command = Theme)
+
             self.MenuBar.add_cascade(label = "Widok", menu = self.ZoomOpctions) #Tworze drugi przycisk i dodaje to co ma wykonać
-            self.MenuBar.add_cascade(label = "Motyw", menu = self.ThemeOpctions) #Tworze trzeci przycisk i dodaje to co ma wykonać
+            # self.MenuBar.add_cascade(label = "Motyw", menu = self.Theme) #Tworze trzeci przycisk i dodaje to co ma wykonać
 
             self.second_gui.config(menu=self.MenuBar) #Podlaczenie calego menubar do drugiego okna
 
@@ -229,16 +240,17 @@ class SecondWindow:
 
         #Stworzenie i ustawienie frame dla widgetow
 
-        self.WidgetBarFrame = tk.Frame(self.second_gui)
+        self.WidgetBarFrame = tk.Frame(self.second_gui, bg ="#252526")
         self.WidgetBarFrame.pack()
 
-        self.ButtonList = ["Wklej", "Wytnij", "Kopiuj", "Zaznacz", "Zmień rozmiar", "Obróć", "Pędzel", "Kształty", "Wypełnienie", "Edytuj kolory"]
+        self.ButtonList = ["Motyw","Wklej", "Wytnij", "Kopiuj", "Zaznacz", "Zmień rozmiar", "Obróć", "Pędzel", "Kształty", "Wypełnienie", "Edytuj kolory"]
         self.ColorList = ["white", "olive", "yellow", "green", "orange", "blue", "red", "grey80", "violet", "grey", "purple", "black", "pink", "brown"]
         def color(): #Aktywacja colorchosera
             self.my_color = colorchooser.askcolor()
 
         self.ListColorButton = [] #Lista potrzebna do ustawenia pozycji colorbutton
         self.SchapesList = [] #Lista potrzebna do ustawienia pozycji ShapesButton
+        self.Button_Theme_List = []
 
         def SetColorGrid(NewLine = 2): #Ustawienie pozycji colorbuttons
             self.row, self.col = 0,0
@@ -258,53 +270,88 @@ class SecondWindow:
                     self.col += 1
                     self.row = 0
 
+        self.btnState = False
+
+        def Theme(): #Funkcja do zmiany motywu (Troche dlugie ale sposob z ttk i style nie chcial ze mna wspolpracowac)
+            if self.btnState:
+                self.Theme_Button.config(image = self.night, activebackground="#252526", bg = "#252526")
+                self.second_gui.config(bg ="#252526")
+                self.WidgetBarFrame.config(bg ="#252526")
+                self.ListboxFrame.config(bg ="#252526")
+                self.ColorFrame.config(bg ="#252526")
+                self.SchapesFrame.config(bg ="#252526")
+                self.canvas.config(bg ="#3f3f40")
+                for button in self.SchapesList:
+                    button.config(bg = "#3f3f40", fg = "#eeeee8")
+                for button in self.Button_Theme_List:
+                    button.config(bg = "#3f3f40", fg = "#eeeee8")
+                self.btnState = False
+            else:
+                self.Theme_Button.config(image = self.day, activebackground="#eeeee8", bg = "#eeeee8")
+                self.second_gui.config(bg ="#eeeee8")
+                self.WidgetBarFrame.config(bg ="#eeeee8")
+                self.ListboxFrame.config(bg ="#eeeee8")
+                self.ColorFrame.config(bg ="#eeeee8")
+                self.SchapesFrame.config(bg ="#eeeee8")
+                self.canvas.config(bg ="#d6d6d2")
+                for button in self.SchapesList:
+                    button.config(bg = "#d6d6d2", fg = "#252526")
+                for button in self.Button_Theme_List:
+                    button.config(bg = "#d6d6d2", fg = "#252526")
+                self.btnState = True
+
         #Frame dla list boxa żeby wszytko było w jednej lini
-        self.ListboxFrame = tk.Frame(self.WidgetBarFrame)
+        self.ListboxFrame = tk.Frame(self.WidgetBarFrame, bg ="#252526")
         self.ListboxFrame.pack(side = tk.RIGHT, padx = 3)
 
         #Frame dla colorbuttons żeby wszytko było w jednej lini
-        self.ColorFrame = tk.Frame(self.WidgetBarFrame)
+        self.ColorFrame = tk.Frame(self.WidgetBarFrame, bg ="#252526")
         self.ColorFrame.pack(side = tk.RIGHT, padx = 3)
 
         #Frame dla schapesbuttons żeby wszytko było w jednej lini
-        self.SchapesFrame = tk.Frame(self.WidgetBarFrame)
+        self.SchapesFrame = tk.Frame(self.WidgetBarFrame, bg ="#252526")
         self.SchapesFrame.pack(side = tk.RIGHT, padx = 3)
 
         self.licznik = 0 # licznik do pętli, żeby wykonała sie tylko 4 razy
-        self.imglist = [ImageTk.PhotoImage(Image.open(r"images\Prosta.png")), ImageTk.PhotoImage(Image.open("Krzywa.png")),
-        ImageTk.PhotoImage(Image.open("Elipsa.png")), ImageTk.PhotoImage(Image.open("Prostokąt.png")),
-        ImageTk.PhotoImage(Image.open("Serce.png")), ImageTk.PhotoImage(Image.open("Gwiazda.png"))]
+        self.imglist = [ImageTk.PhotoImage(Image.open(r"images\Prosta.png")), ImageTk.PhotoImage(Image.open(r"images\Krzywa.png")),
+        ImageTk.PhotoImage(Image.open(r"images\Elipsa.png")), ImageTk.PhotoImage(Image.open(r"images\Prostokąt.png")),
+        ImageTk.PhotoImage(Image.open(r"images\Serce.png")), ImageTk.PhotoImage(Image.open(r"images\Gwiazda.png"))]
         #Lista icon na schapebuttons
 
         #Tworzenie glownych przyciskow
         def AddButtonBar():
             for bb in self.ButtonList:
-                if bb == "Kształty":
+                if bb == "Motyw":
+                    self.day = tk.PhotoImage(file = r"images\on.png")
+                    self.night = tk.PhotoImage(file = r"images\off.png")
+                    self.Theme_Button = tk.Button(self.WidgetBarFrame, image = self.night, activebackground="#252526", borderwidth=0, bg = "#252526", cursor="hand2", command = Theme)
+                    self.Theme_Button.pack(side = tk.LEFT, padx = 10)
+                elif bb == "Kształty":
                     for Schapes in ["Prosta", "Krzywa", "Elipsa", "Prostokąt", "Serce", "Gwiazda"]:
                         for img in self.imglist:
-                            self.SchapesButton = tk.Button(self.SchapesFrame, image = img)
+                            self.SchapesButton = tk.Button(self.SchapesFrame, image = img, bg = "#3f3f40", fg = "#eeeee8", activebackground="#3f3f40", borderwidth=0)
                             self.SchapesList.append(self.SchapesButton)
                             self.licznik += 1
                         if self.licznik == 6:
                             break
-                elif bb == "Pędzel":
-                    self.BarButton = tk.Button(self.WidgetBarFrame, text='Pędzel', width = 11, height = 3, command=self.setup)
-                    self.BarButton.pack(side = tk.LEFT, padx = 3)
                 else:
-                    self.BarButton = tk.Button(self.WidgetBarFrame, text = str(bb), width = 11, height = 3)
+                    self.BarButton = tk.Button(self.WidgetBarFrame, text = str(bb), width = 11, height = 3, command = self.setup if bb == "Pędzel" else None, bg = "#3f3f40", fg = "#eeeee8",activebackground="#3f3f40", borderwidth=0)
                     self.BarButton.pack(side = tk.LEFT, padx = 3)
                     self.BarButton.config(command = color if bb == "Edytuj kolory" else None)
+                    self.Button_Theme_List.append(self.BarButton)
             for col in self.ColorList:
                 self.ColorButton = tk.Button(self.ColorFrame, background = col)
                 self.ListColorButton.append(self.ColorButton)
+
         AddButtonBar() #Wywołanie funkcji do tworzenia przycisków
         SetColorGrid() #Wywołanie funkcji do pozycjonowania colorbuttons
         SetShapesGrid() #Wywołanie funkcji do pozycjonowania shapebuttons
 
         #Stworzenie i ustawienie canvasa
-        self.canvas = tk.Canvas(self.second_gui, width = 855, height = 500, bg = "red")
+        self.canvas = tk.Canvas(self.second_gui, width = 855, height = 500, bg = "#eeeee8")
         self.canvas.pack()
 
+        print(self.ButtonList)
 
     #FUNKCJA RYSOWANIA - POCZATEK - aktywacja przycisku ,,Pędzel"
 
