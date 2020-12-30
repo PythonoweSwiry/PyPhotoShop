@@ -14,7 +14,7 @@ class FirstWindow:
         # self.first_gui.geometry("500x300")
         self.first_gui.title("PyPhotoshop v1.0.0")
         # Dodanie ikony w lewym gornym rogu
-        self.first_gui.wm_iconbitmap(bitmap = "camera.ico")
+        self.first_gui.wm_iconbitmap(bitmap = r"images\camera.ico")
         self.widget()
 
     def widget(self):
@@ -23,7 +23,7 @@ class FirstWindow:
         self.ProgressFrame.pack()
 
         self.canvas = tk.Canvas(self.ProgressFrame, width = 735, height = 560) #Canvas dla zdjecia w tle
-        self.image = ImageTk.PhotoImage(file = "win1_background.png")
+        self.image = ImageTk.PhotoImage(file = r"images\win1_background.png")
         self.canvas.create_image(0, 0, image = self.image, anchor= tk.NW)
         self.canvas.pack()
 
@@ -51,6 +51,8 @@ class FirstWindow:
 class InputWindow:
     def __init__(self, input_gui):#Ustawienia okna
         self.input_gui = input_gui
+        self.input_gui.wm_iconbitmap(bitmap = r"images\camera.ico")
+        self.input_gui.title("PyPhotoshop v1.0.0")
         self.input_gui.config(bg ="#252526")
         self.widget()
 
@@ -83,54 +85,26 @@ class InputWindow:
 
         #Funkcje do lekkiej zmiany koloru tła przyciskow podczas najechania kursorem (Nie, nie da się latwiej xd)
         def button_hover_local(e):
-            if self.btnState:
-                self.Option_Button_Local["bg"] = "#5f5f63"
-            else:
-                self.Option_Button_Local["bg"] = "#b3b3af"
+            self.Option_Button_Local["bg"] = "#5f5f63" if self.btnState else "#b3b3af"
 
         def button_hover_cloud(e):
-            if self.btnState:
-                self.Option_Button_Cloud["bg"] = "#5f5f63"
-            else:
-                self.Option_Button_Cloud["bg"] = "#b3b3af"
+            self.Option_Button_Cloud["bg"] = "#5f5f63" if self.btnState else "#b3b3af"
 
         def button_hover_new(e):
-            if self.btnState:
-                self.Option_Button_New["bg"] = "#5f5f63"
-            else:
-                self.Option_Button_New["bg"] = "#b3b3af"
-
-        # def theme_coursor(e):
-        #     window = pyglet.window.Window()
-        #     cursor = window.get_system_mouse_cursor(win.CURSOR_HAND)
-        #     window.set_mouse_cursor(cursor)
+            self.Option_Button_New["bg"] = "#5f5f63" if self.btnState else "#b3b3af"
 
         def button_hover_leave_local(e):
-            if self.btnState:
-                self.Option_Button_Local["bg"] = "#d6d6d2"
-            else:
-                self.Option_Button_Local["bg"] = "#3f3f40"
+            self.Option_Button_Local["bg"] = "#d6d6d2" if self.btnState else "#3f3f40"
 
         def button_hover_leave_cloud(e):
-            if self.btnState:
-                self.Option_Button_Cloud["bg"] = "#d6d6d2"
-            else:
-                self.Option_Button_Cloud["bg"] = "#3f3f40"
+            self.Option_Button_Cloud["bg"] = "#d6d6d2" if self.btnState else "#3f3f40"
         
         def button_hover_leave_new(e):
-            if self.btnState:
-                self.Option_Button_New["bg"] = "#d6d6d2"
-            else:
-                self.Option_Button_New["bg"] = "#3f3f40"
-
-        # def theme_coursor_leave(e):
-        #     window = pyglet.window.Window()
-        #     cursor = window.get_system_mouse_cursor(win.CURSOR_DEFAULT)
-        #     window.set_mouse_cursor(cursor)
+            self.Option_Button_New["bg"] = "#d6d6d2" if self.btnState else "#3f3f40"
             
         #Obrazy przycisku Theme_Button
-        self.day = tk.PhotoImage(file = "on.png")
-        self.night = tk.PhotoImage(file = "off.png")
+        self.day = tk.PhotoImage(file = r"images\on.png")
+        self.night = tk.PhotoImage(file = r"images\off.png")
 
         #Przycisk ThemeButton do zmiany motywu
         self.Theme_Button = tk.Button(self.input_gui, image = self.night, command = Theme, activebackground="#252526", borderwidth=0, bg = "#252526", cursor="hand2")
@@ -151,7 +125,7 @@ class InputWindow:
         self.InputFrame.grid(row = 2, column = 1, padx = 20)
 
         #Wczytanie obrazow dla przyciskow do wyboru sciezki
-        self.local_disc, self.cloud, self.new = tk.PhotoImage(file = "local_disc.png"), tk.PhotoImage(file = "cloud.png"), tk.PhotoImage(file = "new.png")
+        self.local_disc, self.cloud, self.new = tk.PhotoImage(file = r"images\local_disc.png"), tk.PhotoImage(file = r"images\cloud.png"), tk.PhotoImage(file = r"images\new.png")
 
         self.Option_Button_Local = tk.Button(self.InputFrame, bg = "#3f3f40", fg = "#eeeee8", text = "Wczytaj plik z dysku lokalnego", command = self.NewWindow, image = self.local_disc, compound = tk.LEFT, width = 200, height = 50, font = "Arial 9 bold", relief = tk.FLAT, borderwidth=0, cursor="hand2")
 
@@ -167,11 +141,9 @@ class InputWindow:
         self.Option_Button_Local.bind("<Enter>", button_hover_local)
         self.Option_Button_Cloud.bind("<Enter>", button_hover_cloud)
         self.Option_Button_New.bind("<Enter>", button_hover_new)
-        # self.Theme_Button.bind("<Enter>", theme_coursor)
         self.Option_Button_Local.bind("<Leave>", button_hover_leave_local)
         self.Option_Button_Cloud.bind("<Leave>", button_hover_leave_cloud)
-        self.Option_Button_New.bind("<Leave>", button_hover_leave_new)
-        # self.Theme_Button.bind("<Leave>", theme_coursor_leave)        
+        self.Option_Button_New.bind("<Leave>", button_hover_leave_new)    
 
     def NewWindow(self):
         self.input_gui.destroy() #Usunięcie pierwszego ona
@@ -186,7 +158,7 @@ class SecondWindow:
         # self.second_gui.geometry("804x589")
         self.second_gui.title("PyPhotoshop v1.0.0")
         # Dodanie ikony w lewym gornym rogu
-        self.second_gui.wm_iconbitmap(bitmap = "camera.ico")
+        self.second_gui.wm_iconbitmap(bitmap = r"images\camera.ico")
         # Dodanie obiektu przechowującego obraz
         self.img = tk.PhotoImage()
         self.widget()
@@ -260,8 +232,6 @@ class SecondWindow:
         self.WidgetBarFrame = tk.Frame(self.second_gui)
         self.WidgetBarFrame.pack()
 
-###################### IN-PROGRESS (szukam sposobu zeby to ustawic podobnie jak jest w paincie)
-
         self.ButtonList = ["Wklej", "Wytnij", "Kopiuj", "Zaznacz", "Zmień rozmiar", "Obróć", "Pędzel", "Kształty", "Wypełnienie", "Edytuj kolory"]
         self.ColorList = ["white", "olive", "yellow", "green", "orange", "blue", "red", "grey80", "violet", "grey", "purple", "black", "pink", "brown"]
         def color(): #Aktywacja colorchosera
@@ -301,7 +271,7 @@ class SecondWindow:
         self.SchapesFrame.pack(side = tk.RIGHT, padx = 3)
 
         self.licznik = 0 # licznik do pętli, żeby wykonała sie tylko 4 razy
-        self.imglist = [ImageTk.PhotoImage(Image.open("Prosta.png")), ImageTk.PhotoImage(Image.open("Krzywa.png")),
+        self.imglist = [ImageTk.PhotoImage(Image.open(r"images\Prosta.png")), ImageTk.PhotoImage(Image.open("Krzywa.png")),
         ImageTk.PhotoImage(Image.open("Elipsa.png")), ImageTk.PhotoImage(Image.open("Prostokąt.png")),
         ImageTk.PhotoImage(Image.open("Serce.png")), ImageTk.PhotoImage(Image.open("Gwiazda.png"))]
         #Lista icon na schapebuttons
@@ -330,7 +300,6 @@ class SecondWindow:
         AddButtonBar() #Wywołanie funkcji do tworzenia przycisków
         SetColorGrid() #Wywołanie funkcji do pozycjonowania colorbuttons
         SetShapesGrid() #Wywołanie funkcji do pozycjonowania shapebuttons
-######################
 
         #Stworzenie i ustawienie canvasa
         self.canvas = tk.Canvas(self.second_gui, width = 855, height = 500, bg = "red")
@@ -370,8 +339,6 @@ class SecondWindow:
     def reset(self, event):
         self.old_x, self.old_y = None, None
 ##FUNKCJA RYSOWANIA - koniec
-
-
 
 ### Aplikacja tutaj startuje
 if __name__ == '__main__':
