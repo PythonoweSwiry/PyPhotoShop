@@ -81,12 +81,59 @@ class InputWindow:
                 self.Option_Button_New.config(bg = "#d6d6d2", fg = "#252526")
                 self.btnState = True
 
+        #Funkcje do lekkiej zmiany koloru tła przyciskow podczas najechania kursorem (Nie, nie da się latwiej xd)
+        def button_hover_local(e):
+            if self.btnState:
+                self.Option_Button_Local["bg"] = "#5f5f63"
+            else:
+                self.Option_Button_Local["bg"] = "#b3b3af"
+
+        def button_hover_cloud(e):
+            if self.btnState:
+                self.Option_Button_Cloud["bg"] = "#5f5f63"
+            else:
+                self.Option_Button_Cloud["bg"] = "#b3b3af"
+
+        def button_hover_new(e):
+            if self.btnState:
+                self.Option_Button_New["bg"] = "#5f5f63"
+            else:
+                self.Option_Button_New["bg"] = "#b3b3af"
+
+        # def theme_coursor(e):
+        #     window = pyglet.window.Window()
+        #     cursor = window.get_system_mouse_cursor(win.CURSOR_HAND)
+        #     window.set_mouse_cursor(cursor)
+
+        def button_hover_leave_local(e):
+            if self.btnState:
+                self.Option_Button_Local["bg"] = "#d6d6d2"
+            else:
+                self.Option_Button_Local["bg"] = "#3f3f40"
+
+        def button_hover_leave_cloud(e):
+            if self.btnState:
+                self.Option_Button_Cloud["bg"] = "#d6d6d2"
+            else:
+                self.Option_Button_Cloud["bg"] = "#3f3f40"
+        
+        def button_hover_leave_new(e):
+            if self.btnState:
+                self.Option_Button_New["bg"] = "#d6d6d2"
+            else:
+                self.Option_Button_New["bg"] = "#3f3f40"
+
+        # def theme_coursor_leave(e):
+        #     window = pyglet.window.Window()
+        #     cursor = window.get_system_mouse_cursor(win.CURSOR_DEFAULT)
+        #     window.set_mouse_cursor(cursor)
+            
         #Obrazy przycisku Theme_Button
         self.day = tk.PhotoImage(file = "on.png")
         self.night = tk.PhotoImage(file = "off.png")
 
         #Przycisk ThemeButton do zmiany motywu
-        self.Theme_Button = tk.Button(self.input_gui, image = self.night, command = Theme, activebackground="#252526", borderwidth=0, bg = "#252526")
+        self.Theme_Button = tk.Button(self.input_gui, image = self.night, command = Theme, activebackground="#252526", borderwidth=0, bg = "#252526", cursor="hand2")
         self.Theme_Button.grid(row = 0, column = 1)
 
         #Logo aplikacji
@@ -106,15 +153,25 @@ class InputWindow:
         #Wczytanie obrazow dla przyciskow do wyboru sciezki
         self.local_disc, self.cloud, self.new = tk.PhotoImage(file = "local_disc.png"), tk.PhotoImage(file = "cloud.png"), tk.PhotoImage(file = "new.png")
 
-        self.Option_Button_Local = tk.Button(self.InputFrame, bg = "#3f3f40", fg = "#eeeee8", text = "Wczytaj plik z dysku lokalnego", command = self.NewWindow, image = self.local_disc, compound = tk.LEFT, width = 200, height = 50, font = "Arial 9 bold", relief = tk.FLAT, borderwidth=0)
+        self.Option_Button_Local = tk.Button(self.InputFrame, bg = "#3f3f40", fg = "#eeeee8", text = "Wczytaj plik z dysku lokalnego", command = self.NewWindow, image = self.local_disc, compound = tk.LEFT, width = 200, height = 50, font = "Arial 9 bold", relief = tk.FLAT, borderwidth=0, cursor="hand2")
 
-        self.Option_Button_Cloud = tk.Button(self.InputFrame, bg = "#3f3f40", fg = "#eeeee8", text = "Wczytaj plik z chmury", command = self.NewWindow, image = self.cloud, compound = tk.LEFT, width = 200, height = 50, font = "Arial 9 bold", relief = tk.FLAT, borderwidth=0)
+        self.Option_Button_Cloud = tk.Button(self.InputFrame, bg = "#3f3f40", fg = "#eeeee8", text = "Wczytaj plik z chmury", command = self.NewWindow, image = self.cloud, compound = tk.LEFT, width = 200, height = 50, font = "Arial 9 bold", relief = tk.FLAT, borderwidth=0, cursor="hand2")
 
-        self.Option_Button_New = tk.Button(self.InputFrame, bg = "#3f3f40", fg = "#eeeee8", text = "Nowy", command = self.NewWindow, image = self.new, compound = tk.LEFT, width = 200, height = 50, font = "Arial 9 bold", relief = tk.FLAT, borderwidth=0)
+        self.Option_Button_New = tk.Button(self.InputFrame, bg = "#3f3f40", fg = "#eeeee8", text = "Nowy", command = self.NewWindow, image = self.new, compound = tk.LEFT, width = 200, height = 50, font = "Arial 9 bold", relief = tk.FLAT, borderwidth=0, cursor="hand2")
 
         self.Option_Button_Local.pack(pady = 5)
         self.Option_Button_Cloud.pack(pady = 5)
         self.Option_Button_New.pack(pady = 5)
+
+        #Wywołanie funkcji podswietlania przyciskow
+        self.Option_Button_Local.bind("<Enter>", button_hover_local)
+        self.Option_Button_Cloud.bind("<Enter>", button_hover_cloud)
+        self.Option_Button_New.bind("<Enter>", button_hover_new)
+        # self.Theme_Button.bind("<Enter>", theme_coursor)
+        self.Option_Button_Local.bind("<Leave>", button_hover_leave_local)
+        self.Option_Button_Cloud.bind("<Leave>", button_hover_leave_cloud)
+        self.Option_Button_New.bind("<Leave>", button_hover_leave_new)
+        # self.Theme_Button.bind("<Leave>", theme_coursor_leave)        
 
     def NewWindow(self):
         self.input_gui.destroy() #Usunięcie pierwszego ona
