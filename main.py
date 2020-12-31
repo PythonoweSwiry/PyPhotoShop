@@ -241,7 +241,7 @@ class SecondWindow:
         #Stworzenie i ustawienie frame dla widgetow
 
         self.WidgetBarFrame = tk.Frame(self.second_gui, bg ="#252526")
-        self.WidgetBarFrame.pack()
+        self.WidgetBarFrame.pack(pady = 8)
 
         self.ButtonList = ["Motyw","Wklej", "Wytnij", "Kopiuj", "Zaznacz", "Zmień rozmiar", "Obróć", "Pędzel", "Kształty", "Wypełnienie", "Edytuj kolory"]
         self.ColorList = ["white", "olive", "yellow", "green", "orange", "blue", "red", "grey80", "violet", "grey", "purple", "black", "pink", "brown"]
@@ -312,7 +312,6 @@ class SecondWindow:
         self.SchapesFrame = tk.Frame(self.WidgetBarFrame, bg ="#252526")
         self.SchapesFrame.pack(side = tk.RIGHT, padx = 3)
 
-        self.licznik = 0 # licznik do pętli, żeby wykonała sie tylko 4 razy
         self.imglist = [ImageTk.PhotoImage(Image.open(r"images\Prosta.png")), ImageTk.PhotoImage(Image.open(r"images\Krzywa.png")),
         ImageTk.PhotoImage(Image.open(r"images\Elipsa.png")), ImageTk.PhotoImage(Image.open(r"images\Prostokąt.png")),
         ImageTk.PhotoImage(Image.open(r"images\Serce.png")), ImageTk.PhotoImage(Image.open(r"images\Gwiazda.png"))]
@@ -327,31 +326,73 @@ class SecondWindow:
                     self.Theme_Button = tk.Button(self.WidgetBarFrame, image = self.night, activebackground="#252526", borderwidth=0, bg = "#252526", cursor="hand2", command = Theme)
                     self.Theme_Button.pack(side = tk.LEFT, padx = 10)
                 elif bb == "Kształty":
-                    for Schapes in ["Prosta", "Krzywa", "Elipsa", "Prostokąt", "Serce", "Gwiazda"]:
-                        for img in self.imglist:
-                            self.SchapesButton = tk.Button(self.SchapesFrame, image = img, bg = "#3f3f40", fg = "#eeeee8", activebackground="#3f3f40", borderwidth=0)
-                            self.SchapesList.append(self.SchapesButton)
-                            self.licznik += 1
-                        if self.licznik == 6:
-                            break
+                    # for img in self.imglist:
+                    self.SchapesButton, self.SchapesButton2, self.SchapesButton3, self.SchapesButton4, self.SchapesButton5, self.SchapesButton6 = [tk.Button(self.SchapesFrame, image = img, bg = "#3f3f40", fg = "#eeeee8", activebackground="#3f3f40", borderwidth=0, cursor="hand2")for img in self.imglist]
+                    self.SchapesList.append(self.SchapesButton)
+                    self.SchapesList.append(self.SchapesButton2)
+                    self.SchapesList.append(self.SchapesButton3)
+                    self.SchapesList.append(self.SchapesButton4)
+                    self.SchapesList.append(self.SchapesButton5)
+                    self.SchapesList.append(self.SchapesButton6)
                 else:
-                    self.BarButton = tk.Button(self.WidgetBarFrame, text = str(bb), width = 11, height = 3, command = self.setup if bb == "Pędzel" else None, bg = "#3f3f40", fg = "#eeeee8",activebackground="#3f3f40", borderwidth=0)
-                    self.BarButton.pack(side = tk.LEFT, padx = 3)
+                    self.BarButton = tk.Button(self.WidgetBarFrame, text = str(bb), width = 11, height = 3, command = self.setup if bb == "Pędzel" else None, bg = "#3f3f40", fg = "#eeeee8",activebackground="#3f3f40", borderwidth=0, cursor="hand2")
+                    self.BarButton.pack(side = tk.LEFT, padx = 3, pady = 5)
                     self.BarButton.config(command = color if bb == "Edytuj kolory" else None)
                     self.Button_Theme_List.append(self.BarButton)
             for col in self.ColorList:
-                self.ColorButton = tk.Button(self.ColorFrame, background = col)
+                self.ColorButton = tk.Button(self.ColorFrame, background = col, cursor="hand2")
                 self.ListColorButton.append(self.ColorButton)
 
         AddButtonBar() #Wywołanie funkcji do tworzenia przycisków
         SetColorGrid() #Wywołanie funkcji do pozycjonowania colorbuttons
         SetShapesGrid() #Wywołanie funkcji do pozycjonowania shapebuttons
 
+        def button_schapes_1(e):
+            self.SchapesButton["bg"] = "#5f5f63" if self.btnState else "#b3b3af"
+        def button_schapes_2(e):
+            self.SchapesButton2["bg"] = "#5f5f63" if self.btnState else "#b3b3af"
+        def button_schapes_3(e):
+            self.SchapesButton3["bg"] = "#5f5f63" if self.btnState else "#b3b3af"
+        def button_schapes_4(e):
+            self.SchapesButton4["bg"] = "#5f5f63" if self.btnState else "#b3b3af"
+        def button_schapes_5(e):
+            self.SchapesButton5["bg"] = "#5f5f63" if self.btnState else "#b3b3af"
+        def button_schapes_6(e):
+            self.SchapesButton6["bg"] = "#5f5f63" if self.btnState else "#b3b3af"
+
+        def button_schapes_leave_1(e):
+            self.SchapesButton["bg"] = "#d6d6d2" if self.btnState else "#3f3f40"
+        def button_schapes_leave_2(e):
+            self.SchapesButton2["bg"] = "#d6d6d2" if self.btnState else "#3f3f40"
+        def button_schapes_leave_3(e):
+            self.SchapesButton3["bg"] = "#d6d6d2" if self.btnState else "#3f3f40"
+        def button_schapes_leave_4(e):
+            self.SchapesButton4["bg"] = "#d6d6d2" if self.btnState else "#3f3f40"
+        def button_schapes_leave_5(e):
+            self.SchapesButton5["bg"] = "#d6d6d2" if self.btnState else "#3f3f40"
+        def button_schapes_leave_6(e):
+            self.SchapesButton6["bg"] = "#d6d6d2" if self.btnState else "#3f3f40"
+
+        self.SchapesButton.bind("<Enter>", button_schapes_1)
+        self.SchapesButton2.bind("<Enter>", button_schapes_2)
+        self.SchapesButton3.bind("<Enter>", button_schapes_3)
+        self.SchapesButton4.bind("<Enter>", button_schapes_4)
+        self.SchapesButton5.bind("<Enter>", button_schapes_5)
+        self.SchapesButton6.bind("<Enter>", button_schapes_6)
+
+        self.SchapesButton.bind("<Leave>", button_schapes_leave_1)
+        self.SchapesButton2.bind("<Leave>", button_schapes_leave_2)
+        self.SchapesButton3.bind("<Leave>", button_schapes_leave_3)
+        self.SchapesButton4.bind("<Leave>", button_schapes_leave_4)
+        self.SchapesButton5.bind("<Leave>", button_schapes_leave_5)
+        self.SchapesButton6.bind("<Leave>", button_schapes_leave_6)
+
+        print(self.Button_Theme_List)
+
         #Stworzenie i ustawienie canvasa
-        self.canvas = tk.Canvas(self.second_gui, width = 855, height = 500, bg = "#eeeee8")
+        self.canvas = tk.Canvas(self.second_gui, width = 855, height = 500, bg = "#252526")
         self.canvas.pack()
 
-        print(self.ButtonList)
 
     #FUNKCJA RYSOWANIA - POCZATEK - aktywacja przycisku ,,Pędzel"
 
