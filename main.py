@@ -210,12 +210,6 @@ class SecondWindow:
             self.FileOpctions.add_command(label="Nowy", command=NewCanvas ) #Opcja 1
             self.FileOpctions.add_command(label="Zapisz", command=SaveCanvas ) #Opcja 2
             self.FileOpctions.add_command(label="Wczytaj", command=SelectImage ) #Opcja 3
-            self.FileOpctions.add_separator() #Linia oddzielajaca
-
-            self.Theme = tk.Menu(self.FileOpctions, tearoff = False)
-            self.FileOpctions.add_cascade(label = "Motyw", menu = self.Theme)
-            self.Theme.add_radiobutton(label = "Ciemny")
-            self.Theme.add_radiobutton(label = "Jasny")
 
             self.FileOpctions.add_separator() #Linia oddzielajaca
             self.FileOpctions.add_command(label="Wyjdz", command=self.second_gui.destroy) #Opcja 4
@@ -346,48 +340,6 @@ class SecondWindow:
         AddButtonBar() #Wywołanie funkcji do tworzenia przycisków
         SetColorGrid() #Wywołanie funkcji do pozycjonowania colorbuttons
         SetShapesGrid() #Wywołanie funkcji do pozycjonowania shapebuttons
-
-        def button_schapes_1(e):
-            self.SchapesButton["bg"] = "#5f5f63" if self.btnState else "#b3b3af"
-        def button_schapes_2(e):
-            self.SchapesButton2["bg"] = "#5f5f63" if self.btnState else "#b3b3af"
-        def button_schapes_3(e):
-            self.SchapesButton3["bg"] = "#5f5f63" if self.btnState else "#b3b3af"
-        def button_schapes_4(e):
-            self.SchapesButton4["bg"] = "#5f5f63" if self.btnState else "#b3b3af"
-        def button_schapes_5(e):
-            self.SchapesButton5["bg"] = "#5f5f63" if self.btnState else "#b3b3af"
-        def button_schapes_6(e):
-            self.SchapesButton6["bg"] = "#5f5f63" if self.btnState else "#b3b3af"
-
-        def button_schapes_leave_1(e):
-            self.SchapesButton["bg"] = "#d6d6d2" if self.btnState else "#3f3f40"
-        def button_schapes_leave_2(e):
-            self.SchapesButton2["bg"] = "#d6d6d2" if self.btnState else "#3f3f40"
-        def button_schapes_leave_3(e):
-            self.SchapesButton3["bg"] = "#d6d6d2" if self.btnState else "#3f3f40"
-        def button_schapes_leave_4(e):
-            self.SchapesButton4["bg"] = "#d6d6d2" if self.btnState else "#3f3f40"
-        def button_schapes_leave_5(e):
-            self.SchapesButton5["bg"] = "#d6d6d2" if self.btnState else "#3f3f40"
-        def button_schapes_leave_6(e):
-            self.SchapesButton6["bg"] = "#d6d6d2" if self.btnState else "#3f3f40"
-
-        self.SchapesButton.bind("<Enter>", button_schapes_1)
-        self.SchapesButton2.bind("<Enter>", button_schapes_2)
-        self.SchapesButton3.bind("<Enter>", button_schapes_3)
-        self.SchapesButton4.bind("<Enter>", button_schapes_4)
-        self.SchapesButton5.bind("<Enter>", button_schapes_5)
-        self.SchapesButton6.bind("<Enter>", button_schapes_6)
-
-        self.SchapesButton.bind("<Leave>", button_schapes_leave_1)
-        self.SchapesButton2.bind("<Leave>", button_schapes_leave_2)
-        self.SchapesButton3.bind("<Leave>", button_schapes_leave_3)
-        self.SchapesButton4.bind("<Leave>", button_schapes_leave_4)
-        self.SchapesButton5.bind("<Leave>", button_schapes_leave_5)
-        self.SchapesButton6.bind("<Leave>", button_schapes_leave_6)
-
-        print(self.Button_Theme_List)
 
         #Stworzenie i ustawienie canvasa
         self.canvas = tk.Canvas(self.second_gui, width = 855, height = 500, bg = "#252526")
