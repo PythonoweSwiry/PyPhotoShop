@@ -82,7 +82,7 @@ class InputWindow:
                 self.Option_Button_Cloud.config(bg = "#d6d6d2", fg = "#252526")
                 self.Option_Button_New.config(bg = "#d6d6d2", fg = "#252526")
                 self.btnState = True
-            
+
         #Funkcje do lekkiej zmiany koloru tła przyciskow podczas najechania kursorem
         def button_hover_local(e):
             self.Option_Button_Local["bg"] = "#5f5f63" if self.btnState else "#b3b3af"
@@ -98,10 +98,10 @@ class InputWindow:
 
         def button_hover_leave_cloud(e):
             self.Option_Button_Cloud["bg"] = "#d6d6d2" if self.btnState else "#3f3f40"
-        
+
         def button_hover_leave_new(e):
             self.Option_Button_New["bg"] = "#d6d6d2" if self.btnState else "#3f3f40"
-            
+
         with open(r"save\save.txt", "r") as f:
             self.save = [line.strip() for line in f]
 
@@ -160,7 +160,7 @@ class InputWindow:
         self.Option_Button_New.bind("<Enter>", button_hover_new)
         self.Option_Button_Local.bind("<Leave>", button_hover_leave_local)
         self.Option_Button_Cloud.bind("<Leave>", button_hover_leave_cloud)
-        self.Option_Button_New.bind("<Leave>", button_hover_leave_new)    
+        self.Option_Button_New.bind("<Leave>", button_hover_leave_new)
 
     def NewWindow(self):
         self.input_gui.destroy() #Usunięcie pierwszego ona
@@ -263,7 +263,7 @@ class SecondWindow:
         self.WidgetBarFrame = tk.Frame(self.second_gui, bg ="#252526")
         self.WidgetBarFrame.pack(pady = 8)
 
-        self.ButtonList = ["Motyw","Wklej", "Wytnij", "Kopiuj", "Zaznacz", "Zmień rozmiar", "Obróć", "Pędzel", "Kształty", "Wypełnienie", "Edytuj kolory"]
+        self.ButtonList = ["Motyw","Wklej", "Wytnij", "Kopiuj", "Zaznacz", "Zmień rozmiar", "Obróć", "Pędzel", "Gumka", "Kształty", "Wypełnienie", "Edytuj kolory"]
         self.ColorList = ["white", "olive", "yellow", "green", "orange", "blue", "red", "grey80", "violet", "grey", "purple", "black", "pink", "brown"]
         def color(): #Aktywacja colorchosera
             self.my_color = colorchooser.askcolor()
@@ -354,8 +354,16 @@ class SecondWindow:
                     self.SchapesList.append(self.SchapesButton4)
                     self.SchapesList.append(self.SchapesButton5)
                     self.SchapesList.append(self.SchapesButton6)
+                elif bb == "Pędzel":
+                    self.BarButton = tk.Button(self.WidgetBarFrame, text = str(bb), width = 11, height = 3, command = self.use_pen, bg = "#3f3f40", fg = "#eeeee8", activebackground="#3f3f40", borderwidth=0, cursor="hand2")
+                    self.BarButton.pack(side = tk.LEFT, padx = 3, pady = 5)
+                    self.Button_Theme_List.append(self.BarButton)
+                elif bb == "Gumka":
+                    self.BarButton = tk.Button(self.WidgetBarFrame, text = str(bb), width = 11, height = 3, command = self.use_rubber, bg = "#3f3f40", fg = "#eeeee8", activebackground="#3f3f40", borderwidth=0, cursor="hand2")
+                    self.BarButton.pack(side = tk.LEFT, padx = 3, pady = 5)
+                    self.Button_Theme_List.append(self.BarButton)
                 else:
-                    self.BarButton = tk.Button(self.WidgetBarFrame, text = str(bb), width = 11, height = 3, command = self.setup if bb == "Pędzel" else None, bg = "#3f3f40", fg = "#eeeee8",activebackground="#3f3f40", borderwidth=0, cursor="hand2")
+                    self.BarButton = tk.Button(self.WidgetBarFrame, text = str(bb), width = 11, height = 3, bg = "#3f3f40", fg = "#eeeee8", activebackground="#3f3f40", borderwidth=0, cursor="hand2")
                     self.BarButton.pack(side = tk.LEFT, padx = 3, pady = 5)
                     self.BarButton.config(command = color if bb == "Edytuj kolory" else None)
                     self.Button_Theme_List.append(self.BarButton)
@@ -371,30 +379,43 @@ class SecondWindow:
         self.canvas = tk.Canvas(self.second_gui, width = 855, height = 500, bg = "#252526")
         self.canvas.pack()
 
+        self.setup() #wykonywaie funkcji
 
     #FUNKCJA RYSOWANIA - POCZATEK - aktywacja przycisku ,,Pędzel"
 
     DEFAULT_PEN_SIZE = 5.0 #Tutaj można wstawić wybór grubości pisaka
     DEFAULT_COLOR = 'black' #Póżniej bd można wstawić tutaj wybór kolorów
+    DEFAULT_BACKGROUND_COLOR = 'white'
 
     def setup(self):
         self.old_x, self.old_y = None, None #definicja poczatkowa wspolrzednych
         self.color = self.DEFAULT_COLOR #definicja koloru pisaka
+        self.background_color = self.DEFAULT_BACKGROUND_COLOR #definicja koloru tła
         self.active_button = self.BarButton
-        self.canvas.bind('<B1-Motion>', self.paint) #wybór klawisza myszy <B1-Motion>, <B2-Motion>, <B3-Motion>.
+        self.canvas.bind('<B1-Motion>', self.paint) #wybór klawisza myszy <B1-Motion>, <B2-Motion>, <B3-Motion> i wywołanie funkcji PAINT
         #widget.bind(event, handler) the "handler" function is called with an event object. describing the event.
         self.canvas.bind('<ButtonRelease-1>', self.reset)#wyór klawisza myszy<ButtonRelease-1>, <ButtonRelease-2>, and <ButtonRelease-3>.
 
     def use_pen(self):
         self.activate_button(self.BarButton)
 
-    def activate_button(self, some_button):
+    def use_rubber(self):
+        self.activate_button(self.BarButton, eraser_mode=True)
+
+    def activate_button(self, some_button, eraser_mode=False):
         self.active_button.config(relief=tk.RAISED) #relief - styl widżetu (FLAT, RAISED, SUNKEN, GROOVE, RIDGE)
-    #     some_button.config(relief=SUNKEN)
-        self.some_button = self.active_button
+        some_button.config(relief=tk.SUNKEN) #definicja pozostalych przyciskow
+        self.active_button = some_button
+        self.eraser_on = eraser_mode
 
     def paint(self, event): #rysowanie linii
-        paint_color = self.color
+        self.canvas.config(cursor="pencil")
+        if self.eraser_on and self.btnState:
+            paint_color = "#d6d6d2"  #definicja koloru przy jasnym motywne tła
+        elif self.eraser_on and  not self.btnState:
+            paint_color = "#252526"
+        else:
+            paint_color = self.color
         if self.old_x and self.old_y:
             self.canvas.create_line(self.old_x, self.old_y, event.x, event.y,
                                fill=paint_color)
@@ -405,7 +426,6 @@ class SecondWindow:
     def reset(self, event):
         self.old_x, self.old_y = None, None
 ##FUNKCJA RYSOWANIA - koniec
-
 ### Aplikacja tutaj startuje
 if __name__ == '__main__':
     root = tk.Tk()
