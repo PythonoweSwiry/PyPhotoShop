@@ -82,9 +82,6 @@ class InputWindow:
                 self.Option_Button_Cloud.config(bg = "#d6d6d2", fg = "#252526")
                 self.Option_Button_New.config(bg = "#d6d6d2", fg = "#252526")
                 self.btnState = True
-
-        with open(r"save\save.txt", "r") as f:
-            self.save = [line.strip() for line in f]
             
         #Funkcje do lekkiej zmiany koloru tła przyciskow podczas najechania kursorem
         def button_hover_local(e):
@@ -105,6 +102,9 @@ class InputWindow:
         def button_hover_leave_new(e):
             self.Option_Button_New["bg"] = "#d6d6d2" if self.btnState else "#3f3f40"
             
+        with open(r"save\save.txt", "r") as f:
+            self.save = [line.strip() for line in f]
+
         #Obrazy przycisku Theme_Button
         self.day = tk.PhotoImage(file = r"images\on.png")
         self.night = tk.PhotoImage(file = r"images\off.png")
@@ -124,7 +124,7 @@ class InputWindow:
         self.LastSave = tk.Frame(self.input_gui, bg = "#252526")
         self.LastSave.grid(row = 2, column = 0, padx = 20)
 
-        self.SaveButton1 = tk.Button(self.LastSave, bg = "#3f3f40", fg = "#eeeee8", text = str(self.LastSave[1]), command = self.NewWindow, width = 30
+        self.SaveButton1 = tk.Button(self.LastSave, bg = "#3f3f40", fg = "#eeeee8", text = "Ostatni", command = self.NewWindow, width = 30
         , height = 3, font = "Arial 9 bold", relief = tk.FLAT, borderwidth=0, cursor="hand2")
 
         self.SaveButton2 = tk.Button(self.LastSave, bg = "#3f3f40", fg = "#eeeee8", text = "Przeostatni", command = self.NewWindow, width = 30, height = 3, font = "Arial 9 bold", relief = tk.FLAT, borderwidth=0, cursor="hand2")
@@ -134,8 +134,6 @@ class InputWindow:
         self.SaveButton1.pack(pady = 5)
         self.SaveButton2.pack(pady = 5)
         self.SaveButton3.pack(pady = 5)
-
-
 
         self.InputLabel = tk.Label(self.input_gui, text = "Rozpocznij", font = ("Arial 15 "), bg = "#252526", fg = "#eeeee8")
         self.InputLabel.grid(row = 1, column = 1, padx = 5, pady = 8)
@@ -185,6 +183,12 @@ class SecondWindow:
 
     def widget(self):
         #Funkcje do lewego górnego menu tj. wybór zdjęcia, zapis płótna
+        def SelectImageFromInWindow(number): #Funkcja do wczytania obrazu z poziomu inputwindow
+            self.pilImage = Image.open(number)
+            self.TkImage = ImageTk.PhotoImage( image = self.pilImage )
+            self.canvas.create_image(0, 0, anchor="nw" , image = self.TkImage )
+            self.canvas.pack()
+
         def SelectImage():
             width, height = self.canvas.winfo_reqwidth(), self.canvas.winfo_reqheight()
             self.types = [("png", "*.png"), ("jpg", "*.jpg"), ("jpeg", "*.jpeg"), ("wszystkie", ["*.jpeg", "*.jpg", "*.png"])]
