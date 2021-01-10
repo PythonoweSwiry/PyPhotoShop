@@ -265,8 +265,7 @@ class SecondWindow:
 
         self.ButtonList = ["Motyw","Wklej", "Wytnij", "Kopiuj", "Zaznacz", "Zmień rozmiar", "Obróć", "Pędzel", "Gumka", "Kształty", "Wypełnienie", "Edytuj kolory"]
         self.ColorList = ["white", "olive", "yellow", "green", "orange", "blue", "red", "grey80", "violet", "grey", "purple", "black", "pink", "brown"]
-        def color(): #Aktywacja colorchosera
-            self.my_color = colorchooser.askcolor()
+
 
         self.ListColorButton = [] #Lista potrzebna do ustawenia pozycji colorbutton
         self.SchapesList = [] #Lista potrzebna do ustawienia pozycji ShapesButton
@@ -365,7 +364,7 @@ class SecondWindow:
                 else:
                     self.BarButton = tk.Button(self.WidgetBarFrame, text = str(bb), width = 11, height = 3, bg = "#3f3f40", fg = "#eeeee8", activebackground="#3f3f40", borderwidth=0, cursor="hand2")
                     self.BarButton.pack(side = tk.LEFT, padx = 3, pady = 5)
-                    self.BarButton.config(command = color if bb == "Edytuj kolory" else None)
+                    self.BarButton.config(command = self.use_color if bb == "Edytuj kolory" else None)
                     self.Button_Theme_List.append(self.BarButton)
             for col in self.ColorList:
                 self.ColorButton = tk.Button(self.ColorFrame, background = col, cursor="hand2")
@@ -401,6 +400,10 @@ class SecondWindow:
 
     def use_rubber(self):
         self.activate_button(self.BarButton, eraser_mode=True)
+
+    def use_color(self): #wczytane kolorów i zmiana kolory pisaka
+        self.color = colorchooser.askcolor(color=self.color)[1]
+
 
     def activate_button(self, some_button, eraser_mode=False):
         self.active_button.config(relief=tk.RAISED) #relief - styl widżetu (FLAT, RAISED, SUNKEN, GROOVE, RIDGE)
