@@ -263,7 +263,7 @@ class SecondWindow:
         self.WidgetBarFrame = tk.Frame(self.second_gui, bg ="#252526")
         self.WidgetBarFrame.pack(pady = 8)
 
-        self.ButtonList = ["Motyw","Wklej", "Wytnij", "Kopiuj", "Zaznacz", "Zmień rozmiar", "Obróć", "Pędzel", "Gumka", "Kształty", "Wypełnienie", "Edytuj kolory"]
+        self.ButtonList = ["Motyw","Wklej", "Wytnij", "Kopiuj", "Zaznacz", "Zmień rozmiar", "Obróć", "Pędzel", "Rozmiar_Pisaka","Gumka", "Kształty", "Wypełnienie", "Edytuj kolory"]
         self.ColorList = ["white", "olive", "yellow", "green", "orange", "blue", "red", "grey80", "violet", "grey", "purple", "black", "pink", "brown"]
 
 
@@ -357,10 +357,15 @@ class SecondWindow:
                     self.BarButton = tk.Button(self.WidgetBarFrame, text = str(bb), width = 11, height = 3, command = self.use_pen, bg = "#3f3f40", fg = "#eeeee8", activebackground="#3f3f40", borderwidth=0, cursor="hand2")
                     self.BarButton.pack(side = tk.LEFT, padx = 3, pady = 5)
                     self.Button_Theme_List.append(self.BarButton)
+
                 elif bb == "Gumka":
                     self.BarButton = tk.Button(self.WidgetBarFrame, text = str(bb), width = 11, height = 3, command = self.use_rubber, bg = "#3f3f40", fg = "#eeeee8", activebackground="#3f3f40", borderwidth=0, cursor="hand2")
                     self.BarButton.pack(side = tk.LEFT, padx = 3, pady = 5)
                     self.Button_Theme_List.append(self.BarButton)
+                elif bb == "Rozmiar_Pisaka":
+                    self.BarButtonSize = tk.Spinbox(self.WidgetBarFrame, from_=1, to=10,text = str(bb), width = 7, bg = "#3f3f40", fg = "#eeeee8", activebackground="#3f3f40", borderwidth=0, cursor="hand2")
+                    self.BarButtonSize.pack(side = tk.LEFT, padx = 3, pady = 1)
+                    self.Button_Theme_List.append(self.BarButtonSize)
                 else:
                     self.BarButton = tk.Button(self.WidgetBarFrame, text = str(bb), width = 11, height = 3, bg = "#3f3f40", fg = "#eeeee8", activebackground="#3f3f40", borderwidth=0, cursor="hand2")
                     self.BarButton.pack(side = tk.LEFT, padx = 3, pady = 5)
@@ -388,6 +393,7 @@ class SecondWindow:
 
     def setup(self):
         self.old_x, self.old_y = None, None #definicja poczatkowa wspolrzednych
+        self.line_width = self.BarButtonSize.get()
         self.color = self.DEFAULT_COLOR #definicja koloru pisaka
         self.background_color = self.DEFAULT_BACKGROUND_COLOR #definicja koloru tła
         self.active_button = self.BarButton
@@ -412,6 +418,7 @@ class SecondWindow:
         self.eraser_on = eraser_mode
 
     def paint(self, event): #rysowanie linii
+        self.line_width = self.BarButtonSize.get()
         self.canvas.config(cursor="pencil")
         if self.eraser_on and self.btnState:
             paint_color = "#d6d6d2"  #definicja koloru przy jasnym motywne tła
@@ -420,7 +427,7 @@ class SecondWindow:
         else:
             paint_color = self.color
         if self.old_x and self.old_y:
-            self.canvas.create_line(self.old_x, self.old_y, event.x, event.y,
+            self.canvas.create_line(self.old_x, self.old_y, event.x, event.y,width=self.line_width,
                                fill=paint_color)
                                #ROUND - zokraglone brzegi, SMOOTT - true - spine false - łamana
         self.old_x = event.x
