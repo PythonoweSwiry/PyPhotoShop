@@ -353,6 +353,12 @@ class SecondWindow:
                     self.SchapesList.append(self.SchapesButton4)
                     self.SchapesList.append(self.SchapesButton5)
                     self.SchapesList.append(self.SchapesButton6)
+                
+                elif bb == "Zaznacz":
+                    self.BarButton = tk.Button(self.WidgetBarFrame, text = str(bb), width = 11, height = 3, command = self.select_area, bg = "#3f3f40", fg = "#eeeee8", activebackground="#3f3f40", borderwidth=0, cursor="hand2")
+                    self.BarButton.pack(side = tk.LEFT, padx = 3, pady = 5)
+                    self.Button_Theme_List.append(self.BarButton)
+
                 elif bb == "Pędzel":
                     self.BarButton = tk.Button(self.WidgetBarFrame, text = str(bb), width = 11, height = 3, command = self.use_pen, bg = "#3f3f40", fg = "#eeeee8", activebackground="#3f3f40", borderwidth=0, cursor="hand2")
                     self.BarButton.pack(side = tk.LEFT, padx = 3, pady = 5)
@@ -436,6 +442,89 @@ class SecondWindow:
     def reset(self, event):
         self.old_x, self.old_y = None, None
 ##FUNKCJA RYSOWANIA - koniec
+
+###ZAZNACZANIE - początek
+    def select_area(self):
+        self.rect = Tracker(self.canvas)
+        self.rect.autodraw(outline="black", width=1, dash=[2,3])
+
+class Tracker:
+
+    def __init__(self, canvas):
+        self.canvas = canvas
+        self.item = None
+
+    # rysowanie prostokąta
+    def draw(self, start, end, **kwargs):
+        return self.canvas.create_rectangle(*(list(start)+list(end)), **kwargs)
+
+    # rysowanie za pomocą przycisków myszy
+    def autodraw(self, **kwargs):
+        self.start = None
+        self.canvas.bind("<Button-1>", self.__update)
+        self.canvas.bind("<B1-Motion>", self.__update)
+        self.canvas.bind("<ButtonRelease-1>", self.__stop)
+
+        self.rectopts = kwargs
+
+    # aktualizacja prosokąta - żeby na bieżąco widzieć zmianę
+    def __update(self, event):
+        if not self.start:
+            self.start = [event.x, event.y]
+            return
+
+        if self.item is not None:
+            self.canvas.delete(self.item)
+        self.item = self.draw(self.start, (event.x, event.y), **self.rectopts)
+
+    # oderwanie kursora od płótna - zmiana wydarzeń dołączonych do przycisków (teraz będzie można poruszyć prostokątem)
+    def __stop(self, event):
+        self.canvas.itemconfig(self.item, outline="blue")
+        self.canvas.unbind("<Button-1>")
+        self.canvas.bind("<Button-1>", self.__check)
+    
+    # sprawdzenie czy kliknięto na wnętrze prostokąta czy poza nim - jeśli wnętrze to będzie można ruszać prostokątem
+    def __check(self, event):
+        self.coords = self.canvas.coords(self.item)
+        if not self.coords:
+            self.canvas.unbind("<Button-1>")
+            self.canvas.bind("<Button-1>", self.__update)
+            return
+        
+        xlow = min(self.coords[0], self.coords[2])
+        xhigh = max(self.coords[0], self.coords[2])
+        ylow = min(self.coords[1], self.coords[3])
+        yhigh = max(self.coords[1], self.coords[3])
+        
+        if (event.x < xlow or event.x > xhigh) or (event.y < ylow or event.y > yhigh):
+            self.start = None
+            self.canvas.delete(self.item)
+            self.canvas.unbind("<Button-1>")
+            self.canvas.bind("<Button-1>", self.__update)
+            return
+        else:
+            self.initial = [event.x, event.y]
+            self.canvas.unbind("<B1-Motion>")
+            self.canvas.bind("<B1-Motion>", self.__move)
+            self.canvas.unbind("<ButtonRelease-1>")
+            self.canvas.bind("<ButtonRelease-1>", self.__restart)
+            return
+    
+    # poruszanie prostokątem
+    def __move(self,event):
+        diff_x, diff_y = event.x - self.initial[0], event.y - self.initial[1]
+        self.canvas.move(self.item, diff_x, diff_y )
+        self.initial = [event.x, event.y]
+
+    # kliknięto poza prostokątem, zatem rysowanie nowego (czyli powrót do początkowych ustawień)
+    def __restart(self, event):
+        self.start = None
+        self.canvas.unbind("<B1-Motion>")
+        self.canvas.bind("<B1-Motion>", self.__update)
+        self.canvas.unbind("<ButtonRelease-1>")
+        self.canvas.bind("<ButtonRelease-1>", self.__stop)
+###ZAZNACZANIE - koniec
+
 ### Aplikacja tutaj startuje
 if __name__ == '__main__':
     root = tk.Tk()
