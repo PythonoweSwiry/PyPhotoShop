@@ -355,7 +355,7 @@ class SecondWindow:
                     self.SchapesList.append(self.SchapesButton6)
                 
                 elif bb == "Zaznacz":
-                    self.BarButton = tk.Button(self.WidgetBarFrame, text = str(bb), width = 11, height = 3, command = self.select_area, bg = "#3f3f40", fg = "#eeeee8", activebackground="#3f3f40", borderwidth=0, cursor="hand2")
+                    self.BarButton = tk.Button(self.WidgetBarFrame, text = str(bb), width = 11, height = 3, command = self.autodraw, bg = "#3f3f40", fg = "#eeeee8", activebackground="#3f3f40", borderwidth=0, cursor="hand2")
                     self.BarButton.pack(side = tk.LEFT, padx = 3, pady = 5)
                     self.Button_Theme_List.append(self.BarButton)
 
@@ -398,6 +398,8 @@ class SecondWindow:
     DEFAULT_BACKGROUND_COLOR = 'white'
 
     def setup(self):
+        self.canvas.unbind_class(SecondWindow, '<B1-Motion>')
+        self.canvas.unbind_class(SecondWindow, '<ButtonRelease-1>')
         self.old_x, self.old_y = None, None #definicja poczatkowa wspolrzednych
         self.line_width = self.BarButtonSize.get()
         self.color = self.DEFAULT_COLOR #definicja koloru pisaka
@@ -444,28 +446,19 @@ class SecondWindow:
 ##FUNKCJA RYSOWANIA - koniec
 
 ###ZAZNACZANIE - początek
-    def select_area(self):
-        self.rect = Tracker(self.canvas)
-        self.rect.autodraw(outline="black", width=1, dash=[2,3])
-
-class Tracker:
-
-    def __init__(self, canvas):
-        self.canvas = canvas
-        self.item = None
-
     # rysowanie prostokąta
     def draw(self, start, end, **kwargs):
         return self.canvas.create_rectangle(*(list(start)+list(end)), **kwargs)
 
     # rysowanie za pomocą przycisków myszy
-    def autodraw(self, **kwargs):
+    def autodraw(self):
         self.start = None
+        self.item = None
         self.canvas.bind("<Button-1>", self.__update)
         self.canvas.bind("<B1-Motion>", self.__update)
         self.canvas.bind("<ButtonRelease-1>", self.__stop)
 
-        self.rectopts = kwargs
+        self.rectopts = {"outline" : "black", "width" : 1, "dash" : [2,3]}
 
     # aktualizacja prosokąta - żeby na bieżąco widzieć zmianę
     def __update(self, event):
