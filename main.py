@@ -263,7 +263,7 @@ class SecondWindow:
         self.WidgetBarFrame = tk.Frame(self.second_gui, bg ="#252526")
         self.WidgetBarFrame.pack(pady = 8)
 
-        self.ButtonList = ["Motyw","Wklej", "Wytnij", "Kopiuj", "Zaznacz", "Zmień rozmiar", "Obróć", "Pędzel", "Gumka", "Kształty", "Wypełnienie", "Edytuj kolory"]
+        self.ButtonList = ["Motyw","Wklej", "Wytnij", "Kopiuj", "Zaznacz", "Zmień rozmiar", "Obróć", "Pędzel", "Rozmiar_Pisaka","Gumka", "Kształty", "Wypełnienie", "Edytuj kolory"]
         self.ColorList = ["white", "olive", "yellow", "green", "orange", "blue", "red", "grey80", "violet", "grey", "purple", "black", "pink", "brown"]
 
 
@@ -353,14 +353,25 @@ class SecondWindow:
                     self.SchapesList.append(self.SchapesButton4)
                     self.SchapesList.append(self.SchapesButton5)
                     self.SchapesList.append(self.SchapesButton6)
+
+                elif bb == "Zaznacz":
+                    self.BarButton = tk.Button(self.WidgetBarFrame, text = str(bb), width = 11, height = 3, command = self.autodraw, bg = "#3f3f40", fg = "#eeeee8", activebackground="#3f3f40", borderwidth=0, cursor="hand2")
+                    self.BarButton.pack(side = tk.LEFT, padx = 3, pady = 5)
+                    self.Button_Theme_List.append(self.BarButton)
+
                 elif bb == "Pędzel":
                     self.BarButton = tk.Button(self.WidgetBarFrame, text = str(bb), width = 11, height = 3, command = self.use_pen, bg = "#3f3f40", fg = "#eeeee8", activebackground="#3f3f40", borderwidth=0, cursor="hand2")
                     self.BarButton.pack(side = tk.LEFT, padx = 3, pady = 5)
                     self.Button_Theme_List.append(self.BarButton)
+
                 elif bb == "Gumka":
                     self.BarButton = tk.Button(self.WidgetBarFrame, text = str(bb), width = 11, height = 3, command = self.use_rubber, bg = "#3f3f40", fg = "#eeeee8", activebackground="#3f3f40", borderwidth=0, cursor="hand2")
                     self.BarButton.pack(side = tk.LEFT, padx = 3, pady = 5)
                     self.Button_Theme_List.append(self.BarButton)
+                elif bb == "Rozmiar_Pisaka":
+                    self.BarButtonSize = tk.Spinbox(self.WidgetBarFrame, from_=1, to=10,text = str(bb), width = 7, bg = "#3f3f40", fg = "#eeeee8", activebackground="#3f3f40", borderwidth=0, cursor="hand2")
+                    self.BarButtonSize.pack(side = tk.LEFT, padx = 3, pady = 1)
+                    self.Button_Theme_List.append(self.BarButtonSize)
                 else:
                     self.BarButton = tk.Button(self.WidgetBarFrame, text = str(bb), width = 11, height = 3, bg = "#3f3f40", fg = "#eeeee8", activebackground="#3f3f40", borderwidth=0, cursor="hand2")
                     self.BarButton.pack(side = tk.LEFT, padx = 3, pady = 5)
@@ -378,8 +389,6 @@ class SecondWindow:
         self.canvas = tk.Canvas(self.second_gui, width = 855, height = 500, bg = "#252526")
         self.canvas.pack()
 
-        self.setup() #wykonywaie funkcji
-
     #FUNKCJA RYSOWANIA - POCZATEK - aktywacja przycisku ,,Pędzel"
 
     DEFAULT_PEN_SIZE = 5.0 #Tutaj można wstawić wybór grubości pisaka
@@ -388,30 +397,38 @@ class SecondWindow:
 
     def setup(self):
         self.old_x, self.old_y = None, None #definicja poczatkowa wspolrzednych
+        self.line_width = self.BarButtonSize.get()
         self.color = self.DEFAULT_COLOR #definicja koloru pisaka
         self.background_color = self.DEFAULT_BACKGROUND_COLOR #definicja koloru tła
         self.active_button = self.BarButton
+
         self.canvas.bind('<B1-Motion>', self.paint) #wybór klawisza myszy <B1-Motion>, <B2-Motion>, <B3-Motion> i wywołanie funkcji PAINT
+#         self.canvas.bind("<Button-1>", self.paint)
         #widget.bind(event, handler) the "handler" function is called with an event object. describing the event.
+
         self.canvas.bind('<ButtonRelease-1>', self.reset)#wyór klawisza myszy<ButtonRelease-1>, <ButtonRelease-2>, and <ButtonRelease-3>.
 
     def use_pen(self):
+        self.setup()
         self.activate_button(self.BarButton)
 
     def use_rubber(self):
+        self.setup() #wykonywaie funkcji
         self.activate_button(self.BarButton, eraser_mode=True)
 
     def use_color(self): #wczytane kolorów i zmiana kolory pisaka
+        self.setup() #wykonywaie funkcji
         self.color = colorchooser.askcolor(color=self.color)[1]
 
-
-    def activate_button(self, some_button, eraser_mode=False):
+    def activate_button(self, some_button, eraser_mode=False, draw_mode=False):
         self.active_button.config(relief=tk.RAISED) #relief - styl widżetu (FLAT, RAISED, SUNKEN, GROOVE, RIDGE)
         some_button.config(relief=tk.SUNKEN) #definicja pozostalych przyciskow
         self.active_button = some_button
         self.eraser_on = eraser_mode
+        self.draw_on = draw_mode
 
     def paint(self, event): #rysowanie linii
+        self.line_width = self.BarButtonSize.get()
         self.canvas.config(cursor="pencil")
         if self.eraser_on and self.btnState:
             paint_color = "#d6d6d2"  #definicja koloru przy jasnym motywne tła
@@ -420,15 +437,90 @@ class SecondWindow:
         else:
             paint_color = self.color
         if self.old_x and self.old_y:
-            self.canvas.create_line(self.old_x, self.old_y, event.x, event.y,
+            self.canvas.create_line(self.old_x, self.old_y, event.x, event.y,width=self.line_width,
                                fill=paint_color)
-                               #ROUND - zokraglone brzegi, SMOOTT - true - spine false - łamana
+
+        #ROUND - zokraglone brzegi, SMOOTT - true - spine false - łamana
         self.old_x = event.x
         self.old_y = event.y
 
     def reset(self, event):
         self.old_x, self.old_y = None, None
 ##FUNKCJA RYSOWANIA - koniec
+
+###ZAZNACZANIE - początek
+    # rysowanie prostokąta
+    def draw(self, start, end, **kwargs):
+        return self.canvas.create_rectangle(*(list(start)+list(end)), **kwargs)
+
+    # rysowanie za pomocą przycisków myszy
+    def autodraw(self):
+        self.start = None
+        self.item = None
+        self.canvas.bind("<Button-1>", self.__update)
+        self.canvas.bind("<B1-Motion>", self.__update)
+        self.canvas.bind("<ButtonRelease-1>", self.__stop)
+
+        self.rectopts = {"outline" : "black", "width" : 1, "dash" : [2,3]}
+
+    # aktualizacja prosokąta - żeby na bieżąco widzieć zmianę
+    def __update(self, event):
+        if not self.start:
+            self.start = [event.x, event.y]
+            return
+
+        if self.item is not None:
+            self.canvas.delete(self.item)
+        self.item = self.draw(self.start, (event.x, event.y), **self.rectopts)
+
+    # oderwanie kursora od płótna - zmiana wydarzeń dołączonych do przycisków (teraz będzie można poruszyć prostokątem)
+    def __stop(self, event):
+        self.canvas.itemconfig(self.item, outline="blue", dash=(2,2), fill='')
+        self.canvas.unbind("<Button-1>")
+        self.canvas.bind("<Button-1>", self.__check)
+
+    # sprawdzenie czy kliknięto na wnętrze prostokąta czy poza nim - jeśli wnętrze to będzie można ruszać prostokątem
+    def __check(self, event):
+        self.coords = self.canvas.coords(self.item)
+        if not self.coords:
+            self.canvas.unbind("<Button-1>")
+            self.canvas.bind("<Button-1>", self.__update)
+            return
+
+        xlow = min(self.coords[0], self.coords[2])
+        xhigh = max(self.coords[0], self.coords[2])
+        ylow = min(self.coords[1], self.coords[3])
+        yhigh = max(self.coords[1], self.coords[3])
+
+        if (event.x < xlow or event.x > xhigh) or (event.y < ylow or event.y > yhigh):
+            self.start = None
+            self.canvas.delete(self.item)
+            self.canvas.unbind("<Button-1>")
+            self.canvas.bind("<Button-1>", self.__update)
+            return
+        else:
+            self.initial = [event.x, event.y]
+            self.canvas.unbind("<B1-Motion>")
+            self.canvas.bind("<B1-Motion>", self.__move)
+            self.canvas.unbind("<ButtonRelease-1>")
+            self.canvas.bind("<ButtonRelease-1>", self.__restart)
+            return
+
+    # poruszanie prostokątem
+    def __move(self,event):
+        diff_x, diff_y = event.x - self.initial[0], event.y - self.initial[1]
+        self.canvas.move(self.item, diff_x, diff_y )
+        self.initial = [event.x, event.y]
+
+    # kliknięto poza prostokątem, zatem rysowanie nowego (czyli powrót do początkowych ustawień)
+    def __restart(self, event):
+        self.start = None
+        self.canvas.unbind("<B1-Motion>")
+        self.canvas.bind("<B1-Motion>", self.__update)
+        self.canvas.unbind("<ButtonRelease-1>")
+        self.canvas.bind("<ButtonRelease-1>", self.__stop)
+###ZAZNACZANIE - koniec
+
 ### Aplikacja tutaj startuje
 if __name__ == '__main__':
     root = tk.Tk()
