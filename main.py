@@ -358,6 +358,10 @@ class SecondWindow:
                     self.BarButton = tk.Button(self.WidgetBarFrame, text = str(bb), width = 11, height = 3, command = self.autodraw, bg = "#3f3f40", fg = "#eeeee8", activebackground="#3f3f40", borderwidth=0, cursor="hand2")
                     self.BarButton.pack(side = tk.LEFT, padx = 3, pady = 5)
                     self.Button_Theme_List.append(self.BarButton)
+                elif bb == "Wytnij":
+                    self.BarButton = tk.Button(self.WidgetBarFrame, text = str(bb), width = 11, height = 3, command = self.cut_rect, bg = "#3f3f40", fg = "#eeeee8", activebackground="#3f3f40", borderwidth=0, cursor="hand2")
+                    self.BarButton.pack(side = tk.LEFT, padx = 3, pady = 5)
+                    self.Button_Theme_List.append(self.BarButton)
 
                 elif bb == "Pędzel":
                     self.BarButton = tk.Button(self.WidgetBarFrame, text = str(bb), width = 11, height = 3, command = self.use_pen, bg = "#3f3f40", fg = "#eeeee8", activebackground="#3f3f40", borderwidth=0, cursor="hand2")
@@ -520,6 +524,13 @@ class SecondWindow:
         self.canvas.unbind("<ButtonRelease-1>")
         self.canvas.bind("<ButtonRelease-1>", self.__stop)
 ###ZAZNACZANIE - koniec
+
+    def cut_rect(self):
+        coords = self.canvas.coords(self.item)
+        if self.btnState:
+            self.draw([coords[0], coords[1]], [coords[2], coords[3]] , fill = "#d6d6d2", outline = "#d6d6d2")
+        else: 
+            self.draw([coords[0], coords[1]], [coords[2], coords[3]], fill = "#252526", outline = "#252526")
 
 ### Aplikacja tutaj startuje
 if __name__ == '__main__':
