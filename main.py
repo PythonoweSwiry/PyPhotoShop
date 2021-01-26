@@ -3,7 +3,9 @@ import tkinter.ttk as ttk
 from tkinter import colorchooser
 from tkinter import filedialog
 from tkinter import messagebox
+from tkinter import LAST, ROUND
 from PIL import ImageTk, Image
+from random import randint
 import os
 
 #Klasa pierwszego, powitalnego okna
@@ -263,7 +265,7 @@ class SecondWindow:
         self.WidgetBarFrame = tk.Frame(self.second_gui, bg ="#252526")
         self.WidgetBarFrame.pack(pady = 8)
 
-        self.ButtonList = ["Motyw","Wklej", "Wytnij", "Kopiuj", "Zaznacz", "Zmień rozmiar", "Obróć", "Pędzel", "Rozmiar_Pisaka","Gumka", "Kształty", "Wypełnienie", "Edytuj kolory"]
+        self.ButtonList = ["Motyw","Wklej", "Wytnij", "Kopiuj", "Zaznacz", "Zmień rozmiar", "Obróć", "Pędzel", "Rozmiar_Pisaka","Gumka", "Spray", "Kolorowa linia","Kształty", "Wypełnienie", "Edytuj kolory"]
         self.ColorList = ["white", "olive", "yellow", "green", "orange", "blue", "red", "grey80", "violet", "grey", "purple", "black", "pink", "brown"]
 
 
@@ -368,10 +370,21 @@ class SecondWindow:
                     self.BarButton.pack(side = tk.LEFT, padx = 3, pady = 5)
                     self.Button_Theme_List.append(self.BarButton)
 
+                elif bb == "Spray":
+                    self.BarButton = tk.Button(self.WidgetBarFrame, text = str(bb), width = 11, height = 3, command = self.use_spray, bg = "#3f3f40", fg = "#eeeee8", activebackground="#3f3f40", borderwidth=0, cursor="hand2")
+                    self.BarButton.pack(side = tk.LEFT, padx = 3, pady = 5)
+                    self.Button_Theme_List.append(self.BarButton)
+
+                elif bb == "Kolorowa linia":
+                    self.BarButton = tk.Button(self.WidgetBarFrame, text = str(bb), width = 11, height = 3, command = self.use_color_line, bg = "#3f3f40", fg = "#eeeee8", activebackground="#3f3f40", borderwidth=0, cursor="hand2")
+                    self.BarButton.pack(side = tk.LEFT, padx = 3, pady = 5)
+                    self.Button_Theme_List.append(self.BarButton)
+
                 elif bb == "Gumka":
                     self.BarButton = tk.Button(self.WidgetBarFrame, text = str(bb), width = 11, height = 3, command = self.use_rubber, bg = "#3f3f40", fg = "#eeeee8", activebackground="#3f3f40", borderwidth=0, cursor="hand2")
                     self.BarButton.pack(side = tk.LEFT, padx = 3, pady = 5)
                     self.Button_Theme_List.append(self.BarButton)
+
                 elif bb == "Rozmiar_Pisaka":
                     self.BarButtonSize = tk.Spinbox(self.WidgetBarFrame, from_=1, to=10,text = str(bb), width = 7, bg = "#3f3f40", fg = "#eeeee8", activebackground="#3f3f40", borderwidth=0, cursor="hand2")
                     self.BarButtonSize.pack(side = tk.LEFT, padx = 3, pady = 1)
@@ -390,6 +403,7 @@ class SecondWindow:
         SetShapesGrid() #Wywołanie funkcji do pozycjonowania shapebuttons
 
         #Stworzenie i ustawienie canvasa
+
         self.canvas = tk.Canvas(self.second_gui, width = 855, height = 500, bg = "#252526")
         self.canvas.pack()
 
@@ -399,17 +413,18 @@ class SecondWindow:
     DEFAULT_COLOR = 'black' #Póżniej bd można wstawić tutaj wybór kolorów
     DEFAULT_BACKGROUND_COLOR = 'white'
 
+
+
+
     def setup(self):
         self.old_x, self.old_y = None, None #definicja poczatkowa wspolrzednych
         self.line_width = self.BarButtonSize.get()
         self.color = self.DEFAULT_COLOR #definicja koloru pisaka
         self.background_color = self.DEFAULT_BACKGROUND_COLOR #definicja koloru tła
         self.active_button = self.BarButton
-
         self.canvas.bind('<B1-Motion>', self.paint) #wybór klawisza myszy <B1-Motion>, <B2-Motion>, <B3-Motion> i wywołanie funkcji PAINT
 #         self.canvas.bind("<Button-1>", self.paint)
         #widget.bind(event, handler) the "handler" function is called with an event object. describing the event.
-
         self.canvas.bind('<ButtonRelease-1>', self.reset)#wyór klawisza myszy<ButtonRelease-1>, <ButtonRelease-2>, and <ButtonRelease-3>.
 
     def use_pen(self):
@@ -420,16 +435,28 @@ class SecondWindow:
         self.setup() #wykonywaie funkcji
         self.activate_button(self.BarButton, eraser_mode=True)
 
+    def use_spray(self):
+        self.setup() #wykonywaie funkcji
+        self.activate_button(self.BarButton, spray_mode=True)
+        self.eraser_on = False
+
+    def use_color_line(self):
+        self.setup() #wykonywaie funkcji
+        self.activate_button(self.BarButton, flower_mode=True)
+        self.eraser_on = False
+
     def use_color(self): #wczytane kolorów i zmiana kolory pisaka
         self.setup() #wykonywaie funkcji
         self.color = colorchooser.askcolor(color=self.color)[1]
 
-    def activate_button(self, some_button, eraser_mode=False, draw_mode=False):
+    def activate_button(self, some_button, eraser_mode=False, draw_mode=False, spray_mode = False, flower_mode = False ):
         self.active_button.config(relief=tk.RAISED) #relief - styl widżetu (FLAT, RAISED, SUNKEN, GROOVE, RIDGE)
         some_button.config(relief=tk.SUNKEN) #definicja pozostalych przyciskow
         self.active_button = some_button
         self.eraser_on = eraser_mode
         self.draw_on = draw_mode
+        self.spray_on = spray_mode
+        self.flower_on = flower_mode
 
     def paint(self, event): #rysowanie linii
         self.line_width = self.BarButtonSize.get()
@@ -441,8 +468,26 @@ class SecondWindow:
         else:
             paint_color = self.color
         if self.old_x and self.old_y:
-            self.canvas.create_line(self.old_x, self.old_y, event.x, event.y,width=self.line_width,
-                               fill=paint_color)
+            if self.spray_on:
+                self.toolsThickness = 2
+                multiplier = 8
+                xrand = randint(-self.toolsThickness * multiplier,
+                                 +self.toolsThickness * multiplier)
+                yrand = randint(-self.toolsThickness * multiplier,
+                                 +self.toolsThickness * multiplier)
+
+                self.canvas.create_oval(event.x + xrand, event.y + yrand,
+                                        event.x + xrand + self.toolsThickness, event.y + yrand + self.toolsThickness,
+                                        fill=paint_color, outline = paint_color, width=self.line_width)
+            elif self.flower_on:
+                tk_rgb = "#%02x%02x%02x" % (randint(140,255), randint(140,225), 40)
+
+                self.canvas.create_line(self.old_x , self.old_y,
+                                        event.x, event.y,
+                                         width=self.line_width, fill = tk_rgb)
+            else:
+                self.canvas.create_line(self.old_x, self.old_y, event.x, event.y,width=self.line_width,
+                                   fill=paint_color, capstyle=ROUND, smooth = True)
 
         #ROUND - zokraglone brzegi, SMOOTT - true - spine false - łamana
         self.old_x = event.x
@@ -451,6 +496,22 @@ class SecondWindow:
     def reset(self, event):
         self.old_x, self.old_y = None, None
 ##FUNKCJA RYSOWANIA - koniec
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ###ZAZNACZANIE - początek
     # rysowanie prostokąta
@@ -529,7 +590,7 @@ class SecondWindow:
         coords = self.canvas.coords(self.item)
         if self.btnState:
             self.draw([coords[0], coords[1]], [coords[2], coords[3]] , fill = "#d6d6d2", outline = "#d6d6d2")
-        else: 
+        else:
             self.draw([coords[0], coords[1]], [coords[2], coords[3]], fill = "#252526", outline = "#252526")
 
 ### Aplikacja tutaj startuje
