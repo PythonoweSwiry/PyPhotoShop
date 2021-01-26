@@ -265,7 +265,8 @@ class SecondWindow:
         self.WidgetBarFrame = tk.Frame(self.second_gui, bg ="#252526")
         self.WidgetBarFrame.pack(pady = 8)
 
-        self.ButtonList = ["Motyw","Wklej", "Wytnij", "Kopiuj", "Zaznacz", "Zmień rozmiar", "Obróć", "Pędzel", "Rozmiar_Pisaka","Gumka", "Spray", "Kolorowa linia","Kształty", "Wypełnienie", "Edytuj kolory"]
+        self.ButtonList = ["Motyw","Wklej", "Wytnij", "Kopiuj", "Zaznacz", "Zmień rozmiar", "Obróć", "Pędzel", "Rozmiar_Pisaka","Gumka",
+                            "Spray", "Kolorowa linia","Kosmos line","Kształty", "Wypełnienie", "Edytuj kolory"]
         self.ColorList = ["white", "olive", "yellow", "green", "orange", "blue", "red", "grey80", "violet", "grey", "purple", "black", "pink", "brown"]
 
 
@@ -380,6 +381,11 @@ class SecondWindow:
                     self.BarButton.pack(side = tk.LEFT, padx = 3, pady = 5)
                     self.Button_Theme_List.append(self.BarButton)
 
+                elif bb == "Kosmos line":
+                    self.BarButton = tk.Button(self.WidgetBarFrame, text = str(bb), width = 11, height = 3, command = self.use_cosmos, bg = "#3f3f40", fg = "#eeeee8", activebackground="#3f3f40", borderwidth=0, cursor="hand2")
+                    self.BarButton.pack(side = tk.LEFT, padx = 3, pady = 5)
+                    self.Button_Theme_List.append(self.BarButton)
+
                 elif bb == "Gumka":
                     self.BarButton = tk.Button(self.WidgetBarFrame, text = str(bb), width = 11, height = 3, command = self.use_rubber, bg = "#3f3f40", fg = "#eeeee8", activebackground="#3f3f40", borderwidth=0, cursor="hand2")
                     self.BarButton.pack(side = tk.LEFT, padx = 3, pady = 5)
@@ -440,6 +446,11 @@ class SecondWindow:
         self.activate_button(self.BarButton, spray_mode=True)
         self.eraser_on = False
 
+    def use_cosmos(self):
+        self.setup() #wykonywaie funkcji
+        self.activate_button(self.BarButton, cosmos_mode=True)
+        self.eraser_on = False
+
     def use_color_line(self):
         self.setup() #wykonywaie funkcji
         self.activate_button(self.BarButton, flower_mode=True)
@@ -449,7 +460,7 @@ class SecondWindow:
         self.setup() #wykonywaie funkcji
         self.color = colorchooser.askcolor(color=self.color)[1]
 
-    def activate_button(self, some_button, eraser_mode=False, draw_mode=False, spray_mode = False, flower_mode = False ):
+    def activate_button(self, some_button, eraser_mode=False, draw_mode=False, spray_mode = False, flower_mode = False, cosmos_mode = False ):
         self.active_button.config(relief=tk.RAISED) #relief - styl widżetu (FLAT, RAISED, SUNKEN, GROOVE, RIDGE)
         some_button.config(relief=tk.SUNKEN) #definicja pozostalych przyciskow
         self.active_button = some_button
@@ -457,6 +468,7 @@ class SecondWindow:
         self.draw_on = draw_mode
         self.spray_on = spray_mode
         self.flower_on = flower_mode
+        self.cosmos_on = cosmos_mode
 
     def paint(self, event): #rysowanie linii
         self.line_width = self.BarButtonSize.get()
@@ -479,6 +491,18 @@ class SecondWindow:
                 self.canvas.create_oval(event.x + xrand, event.y + yrand,
                                         event.x + xrand + self.toolsThickness, event.y + yrand + self.toolsThickness,
                                         fill=paint_color, outline = paint_color, width=self.line_width)
+            elif self.cosmos_on:
+                self.toolsThickness = 4
+                multiplier = 6
+                xrand = randint(-self.toolsThickness * multiplier,
+                                 +self.toolsThickness * multiplier)
+                yrand = randint(-self.toolsThickness * multiplier,
+                                 +self.toolsThickness * multiplier)
+                tk_rgb = "#%02x%02x%02x" % (randint(5,255), randint(10,150), randint(13,255))
+                self.canvas.create_oval(event.x + xrand, event.y + yrand,
+                                        event.x + self.toolsThickness, event.y + self.toolsThickness,
+                                        fill=tk_rgb, outline = tk_rgb, width=self.line_width)
+
             elif self.flower_on:
                 tk_rgb = "#%02x%02x%02x" % (randint(140,255), randint(140,225), 40)
 
