@@ -45,17 +45,18 @@ class FirstWindow:
 
     #Komenda do zmieny okna
     def NewWindow(self):
-            self.first_gui.destroy() #Usunięcie pierwszego ona
-            self.input_gui = tk.Tk() #Stworzenie drugiego okna
-            self.app = InputWindow(self.input_gui) #Wywołanie drugiego ona? Nie do końca wiem bo musiałem się wspomóc stackoverflow
+        self.first_gui.destroy() #Usunięcie pierwszego ona
+        self.input_gui = tk.Tk() #Stworzenie drugiego okna
+        self.app = InputWindow(self.input_gui) #Wywołanie drugiego ona? Nie do końca wiem bo musiałem się wspomóc stackoverflow
 
 #Klasa drugiego okna, z wyborem sciezki pliku
 class InputWindow:
     def __init__(self, input_gui):#Ustawienia okna
         self.input_gui = input_gui
-        self.input_gui.wm_iconbitmap(bitmap = r"images\camera.ico")
-        self.input_gui.title("PyPhotoshop v1.0.0")
-        self.input_gui.config(bg ="#252526")
+        input_gui.wm_iconbitmap(bitmap = r"images\camera.ico")
+        input_gui.title("PyPhotoshop v1.0.0")
+        input_gui.config(bg ="#252526")
+        input_gui.geometry("600x400")
         self.widget()
 
     def widget(self):#Funkcje z wszytkimi widgetami w oknie
@@ -63,23 +64,21 @@ class InputWindow:
 
         def Theme(): #Funkcja do zmiany motywu (Troche dlugie ale sposob z ttk i style nie chcial ze mna wspolpracowac)
             if self.btnState:
-                self.Theme_Button.config(image = self.night, activebackground="#252526", bg = "#252526")
-                self.NameLabel.config(bg = "#252526", fg = "#eeeee8")
+                Theme_Button.config(image = night, activebackground="#252526", bg = "#252526")
+                NameLabel.config(bg = "#252526", fg = "#eeeee8")
                 self.input_gui.config(bg ="#252526")
-                self.InfoLabel.config(bg = "#252526", fg = "#eeeee8")
-                self.InputLabel.config(bg = "#252526", fg = "#eeeee8")
-                self.InputFrame.config(bg = "#252526")
+                InputLabel.config(bg = "#252526", fg = "#eeeee8")
+                InputFrame.config(bg = "#252526")
                 self.Option_Button_Local.config(bg = "#3f3f40", fg = "#eeeee8")
                 self.Option_Button_Cloud.config(bg = "#3f3f40", fg = "#eeeee8")
                 self.Option_Button_New.config(bg = "#3f3f40", fg = "#eeeee8")
                 self.btnState = False
             else:
-                self.Theme_Button.config(image = self.day, activebackground="#eeeee8", bg = "#eeeee8")
-                self.NameLabel.configure(bg = "#eeeee8", fg = "#252526")
+                Theme_Button.config(image = day, activebackground="#eeeee8", bg = "#eeeee8")
+                NameLabel.configure(bg = "#eeeee8", fg = "#252526")
                 self.input_gui.config(bg ="#eeeee8")
-                self.InfoLabel.config(bg = "#eeeee8", fg = "#252526")
-                self.InputLabel.config(bg = "#eeeee8", fg = "#252526")
-                self.InputFrame.config(bg = "#eeeee8")
+                InputLabel.config(bg = "#eeeee8", fg = "#252526")
+                InputFrame.config(bg = "#eeeee8")
                 self.Option_Button_Local.config(bg = "#d6d6d2", fg = "#252526")
                 self.Option_Button_Cloud.config(bg = "#d6d6d2", fg = "#252526")
                 self.Option_Button_New.config(bg = "#d6d6d2", fg = "#252526")
@@ -108,49 +107,31 @@ class InputWindow:
             self.save = [line.strip() for line in f]
 
         #Obrazy przycisku Theme_Button
-        self.day = tk.PhotoImage(file = r"images\on.png")
-        self.night = tk.PhotoImage(file = r"images\off.png")
+        day = tk.PhotoImage(file = r"images\on.png")
+        night = tk.PhotoImage(file = r"images\off.png")
 
         #Przycisk ThemeButton do zmiany motywu
-        self.Theme_Button = tk.Button(self.input_gui, image = self.night, command = Theme, activebackground="#252526", borderwidth=0, bg = "#252526", cursor="hand2")
-        self.Theme_Button.grid(row = 0, column = 1)
+        Theme_Button = tk.Button(self.input_gui, image = night, command = Theme, activebackground="#252526", borderwidth=0, bg = "#252526", cursor="hand2")
+        Theme_Button.grid(row = 0, column = 1)
 
         #Logo aplikacji
-        self.NameLabel = tk.Label(self.input_gui, text = "PyPhotoshop 2020", font = ("Arial 35 "), bg = "#252526", fg = "#eeeee8")
-        self.NameLabel.grid(row = 0, column = 0, padx = 20, pady = 20)
+        NameLabel = tk.Label(self.input_gui, text = "PyPhotoshop 2020", font = ("Arial 35 "), bg = "#252526", fg = "#eeeee8")
+        NameLabel.grid(row = 0, column = 0, padx = 20, pady = 20)
 
-        #Na to mam pomysl ale musze to dopracowac
-        self.InfoLabel = tk.Label(self.input_gui, text = "Otwórz ostatnio używane", font = ("Arial", 15), bg = "#252526", fg = "#eeeee8")
-        self.InfoLabel.grid(row = 1, column = 0, pady = 8)
+        InputLabel = tk.Label(self.input_gui, text = "Rozpocznij", font = ("Arial 15 "), bg = "#252526", fg = "#eeeee8")
+        InputLabel.grid(row = 1, column = 0, padx = (200,50), pady = 8)
 
-        self.LastSave = tk.Frame(self.input_gui, bg = "#252526")
-        self.LastSave.grid(row = 2, column = 0, padx = 20)
-
-        self.SaveButton1 = tk.Button(self.LastSave, bg = "#3f3f40", fg = "#eeeee8", text = "Ostatni", command = self.NewWindow, width = 30
-        , height = 3, font = "Arial 9 bold", relief = tk.FLAT, borderwidth=0, cursor="hand2")
-
-        self.SaveButton2 = tk.Button(self.LastSave, bg = "#3f3f40", fg = "#eeeee8", text = "Przeostatni", command = self.NewWindow, width = 30, height = 3, font = "Arial 9 bold", relief = tk.FLAT, borderwidth=0, cursor="hand2")
-
-        self.SaveButton3 = tk.Button(self.LastSave, bg = "#3f3f40", fg = "#eeeee8", text = "Przedprzedostatni", command = self.NewWindow, width = 30, height = 3, font = "Arial 9 bold", relief = tk.FLAT, borderwidth=0, cursor="hand2")
-
-        self.SaveButton1.pack(pady = 5)
-        self.SaveButton2.pack(pady = 5)
-        self.SaveButton3.pack(pady = 5)
-
-        self.InputLabel = tk.Label(self.input_gui, text = "Rozpocznij", font = ("Arial 15 "), bg = "#252526", fg = "#eeeee8")
-        self.InputLabel.grid(row = 1, column = 1, padx = 5, pady = 8)
-
-        self.InputFrame = tk.Frame(self.input_gui, bg = "#252526")
-        self.InputFrame.grid(row = 2, column = 1, padx = 20)
+        InputFrame = tk.Frame(self.input_gui, bg = "#252526")
+        InputFrame.grid(row = 2, column = 0, padx = (200,50))
 
         #Wczytanie obrazow dla przyciskow do wyboru sciezki
         self.local_disc, self.cloud, self.new = tk.PhotoImage(file = r"images\local_disc.png"), tk.PhotoImage(file = r"images\cloud.png"), tk.PhotoImage(file = r"images\new.png")
 
-        self.Option_Button_Local = tk.Button(self.InputFrame, bg = "#3f3f40", fg = "#eeeee8", text = "Wczytaj plik z dysku lokalnego", command = self.NewWindow, image = self.local_disc, compound = tk.LEFT, width = 200, height = 50, font = "Arial 9 bold", relief = tk.FLAT, borderwidth=0, cursor="hand2")
+        self.Option_Button_Local = tk.Button(InputFrame, bg = "#3f3f40", fg = "#eeeee8", text = "Wczytaj plik z dysku lokalnego", command = self.NewWindow, image = self.local_disc, compound = tk.LEFT, width = 200, height = 50, font = "Arial 9 bold", relief = tk.FLAT, borderwidth=0, cursor="hand2")
 
-        self.Option_Button_Cloud = tk.Button(self.InputFrame, bg = "#3f3f40", fg = "#eeeee8", text = "Wczytaj plik z chmury", command = self.NewWindow, image = self.cloud, compound = tk.LEFT, width = 200, height = 50, font = "Arial 9 bold", relief = tk.FLAT, borderwidth=0, cursor="hand2")
+        self.Option_Button_Cloud = tk.Button(InputFrame, bg = "#3f3f40", fg = "#eeeee8", text = "Wczytaj plik z chmury", command = self.NewWindow, image = self.cloud, compound = tk.LEFT, width = 200, height = 50, font = "Arial 9 bold", relief = tk.FLAT, borderwidth=0, cursor="hand2")
 
-        self.Option_Button_New = tk.Button(self.InputFrame, bg = "#3f3f40", fg = "#eeeee8", text = "Nowy", command = self.NewWindow, image = self.new, compound = tk.LEFT, width = 200, height = 50, font = "Arial 9 bold", relief = tk.FLAT, borderwidth=0, cursor="hand2")
+        self.Option_Button_New = tk.Button(InputFrame, bg = "#3f3f40", fg = "#eeeee8", text = "Nowy", command = self.NewWindow, image = self.new, compound = tk.LEFT, width = 200, height = 50, font = "Arial 9 bold", relief = tk.FLAT, borderwidth=0, cursor="hand2")
 
         self.Option_Button_Local.pack(pady = 5)
         self.Option_Button_Cloud.pack(pady = 5)
@@ -168,7 +149,7 @@ class InputWindow:
         self.input_gui.destroy() #Usunięcie pierwszego ona
         self.second_gui = tk.Tk() #Stworzenie drugiego okna
         self.app = SecondWindow(self.second_gui) #Wywołanie drugiego ona? Nie do końca wiem bo musiałem się wspomóc stackoverflow
-
+        
 #Klasa drugiego okna "Głównego"
 class SecondWindow:
     def __init__(self, second_gui,):
