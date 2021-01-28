@@ -265,8 +265,8 @@ class SecondWindow:
         self.WidgetBarFrame = tk.Frame(self.second_gui, bg ="#252526")
         self.WidgetBarFrame.pack(pady = 8)
 
-        self.ButtonList = ["Motyw","Wklej", "Wytnij", "Kopiuj", "Zaznacz", "Zmień rozmiar", "Obróć", "Pędzel", "Rozmiar_Pisaka","Gumka",
-                            "Spray", "Kolorowa linia","Kosmos line","Rysuj okrąg","Usuń wszystko","Kształty", "Edytuj kolory"]
+        self.ButtonList = ["Motyw","Wklej", "Wytnij", "Kopiuj", "Zaznacz", "Zmień rozmiar", "Obróć", "Pędzel","Gumka", "Rozmiar_Pisaka",
+                            "Spray", "Edytuj kolory","Kolorowa linia","Kosmos line","Rysuj okrąg","Usuń wszystko","Kształty" ]
         self.ColorList = ["white", "olive", "yellow", "green", "orange", "blue", "red", "grey80", "violet", "grey", "purple", "black", "pink", "brown"]
 
 
@@ -547,7 +547,8 @@ class SecondWindow:
     def end_draw(self, event):
         self.canvas = event.widget
         if self.drawn: self.canvas.delete(self.drawn)
-        objectId = self.shape[0](self.start.x, self.start.y, event.x, event.y)
+        tk_rgb = "#%02x%02x%02x" % (randint(5,255), randint(10,150), randint(13,255))
+        objectId = self.shape[0](self.start.x, self.start.y, event.x, event.y, outline=tk_rgb, width=4)
         trace = 0
         if trace: print (objectId)
         self.drawn = objectId
