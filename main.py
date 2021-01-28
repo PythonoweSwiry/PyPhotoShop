@@ -14,31 +14,31 @@ class FirstWindow:
         #Ustawienia okna
         self.first_gui = first_gui
         # self.first_gui.geometry("500x300")
-        self.first_gui.title("PyPhotoshop v1.0.0")
+        first_gui.title("PyPhotoshop v1.0.0")
         # Dodanie ikony w lewym gornym rogu
-        self.first_gui.wm_iconbitmap(bitmap = r"images\camera.ico")
+        first_gui.wm_iconbitmap(bitmap = r"images\camera.ico")
         self.widget()
 
     def widget(self):
         #Frame dla canvasa i progressbara
-        self.ProgressFrame = tk.Frame(self.first_gui)
-        self.ProgressFrame.pack()
+        ProgressFrame = tk.Frame(self.first_gui)
+        ProgressFrame.pack()
 
-        self.canvas = tk.Canvas(self.ProgressFrame, width = 735, height = 560) #Canvas dla zdjecia w tle
-        self.image = ImageTk.PhotoImage(file = r"images\win1_background.png")
-        self.canvas.create_image(0, 0, image = self.image, anchor= tk.NW)
-        self.canvas.pack()
+        canvas = tk.Canvas(ProgressFrame, width = 735, height = 560) #Canvas dla zdjecia w tle
+        image = ImageTk.PhotoImage(file = r"images\win1_background.png")
+        canvas.create_image(0, 0, image = image, anchor= tk.NW)
+        canvas.pack()
 
         #Progressbar na dole okna
-        self.Progress = ttk.Progressbar(self.ProgressFrame, orient = tk.HORIZONTAL, length = 500, mode = "determinate")
-        self.Progress.place(x = 100, y = 500)
+        Progress = ttk.Progressbar(ProgressFrame, orient = tk.HORIZONTAL, length = 500, mode = "determinate")
+        Progress.place(x = 100, y = 500)
 
         #Funkcja do działania progressbaru
         def bar():
             import time
             for i in range(0,100,1):
-                self.Progress["value"] = i
-                self.ProgressFrame.update_idletasks()
+                Progress["value"] = i
+                ProgressFrame.update_idletasks()
                 time.sleep(0.02)
             self.NewWindow()
         bar()
