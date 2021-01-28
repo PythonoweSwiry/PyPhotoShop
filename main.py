@@ -266,7 +266,7 @@ class SecondWindow:
         self.WidgetBarFrame.pack(pady = 8)
 
         self.ButtonList = ["Motyw","Wklej", "Wytnij", "Kopiuj", "Zaznacz", "Zmień rozmiar", "Obróć", "Pędzel", "Rozmiar_Pisaka","Gumka",
-                            "Spray", "Kolorowa linia","Kosmos line","Kształty", "Wypełnienie", "Edytuj kolory"]
+                            "Spray", "Kolorowa linia","Kosmos line","Rysuj okrąg","Usuń wszystko","Kształty", "Edytuj kolory"]
         self.ColorList = ["white", "olive", "yellow", "green", "orange", "blue", "red", "grey80", "violet", "grey", "purple", "black", "pink", "brown"]
 
 
@@ -386,6 +386,16 @@ class SecondWindow:
                     self.BarButton.pack(side = tk.LEFT, padx = 3, pady = 5)
                     self.Button_Theme_List.append(self.BarButton)
 
+                elif bb == "Rysuj okrąg":
+                    self.BarButton = tk.Button(self.WidgetBarFrame, text = str(bb), width = 11, height = 3, command = self.use_circle, bg = "#3f3f40", fg = "#eeeee8", activebackground="#3f3f40", borderwidth=0, cursor="hand2")
+                    self.BarButton.pack(side = tk.LEFT, padx = 3, pady = 5)
+                    self.Button_Theme_List.append(self.BarButton)
+
+                elif bb == "Usuń wszystko":
+                    self.BarButton = tk.Button(self.WidgetBarFrame, text = str(bb), width = 11, height = 3, command = self.use_clean, bg = "#3f3f40", fg = "#eeeee8", activebackground="#3f3f40", borderwidth=0, cursor="hand2")
+                    self.BarButton.pack(side = tk.LEFT, padx = 3, pady = 5)
+                    self.Button_Theme_List.append(self.BarButton)
+
                 elif bb == "Gumka":
                     self.BarButton = tk.Button(self.WidgetBarFrame, text = str(bb), width = 11, height = 3, command = self.use_rubber, bg = "#3f3f40", fg = "#eeeee8", activebackground="#3f3f40", borderwidth=0, cursor="hand2")
                     self.BarButton.pack(side = tk.LEFT, padx = 3, pady = 5)
@@ -395,10 +405,15 @@ class SecondWindow:
                     self.BarButtonSize = tk.Spinbox(self.WidgetBarFrame, from_=1, to=10,text = str(bb), width = 7, bg = "#3f3f40", fg = "#eeeee8", activebackground="#3f3f40", borderwidth=0, cursor="hand2")
                     self.BarButtonSize.pack(side = tk.LEFT, padx = 3, pady = 1)
                     self.Button_Theme_List.append(self.BarButtonSize)
+
+                elif bb == "Edytuj kolory":
+                    self.BarButton = tk.Button(self.WidgetBarFrame, text = str(bb), width = 11, height = 3, command = self.use_color, bg = "#3f3f40", fg = "#eeeee8", activebackground="#3f3f40", borderwidth=0, cursor="hand2")
+                    self.BarButton.pack(side = tk.LEFT, padx = 3, pady = 5)
+                    self.Button_Theme_List.append(self.BarButton)
+
                 else:
                     self.BarButton = tk.Button(self.WidgetBarFrame, text = str(bb), width = 11, height = 3, bg = "#3f3f40", fg = "#eeeee8", activebackground="#3f3f40", borderwidth=0, cursor="hand2")
                     self.BarButton.pack(side = tk.LEFT, padx = 3, pady = 5)
-                    self.BarButton.config(command = self.use_color if bb == "Edytuj kolory" else None)
                     self.Button_Theme_List.append(self.BarButton)
             for col in self.ColorList:
                 self.ColorButton = tk.Button(self.ColorFrame, background = col, cursor="hand2")
@@ -521,21 +536,24 @@ class SecondWindow:
         self.old_x, self.old_y = None, None
 ##FUNKCJA RYSOWANIA - koniec
 
+    def use_circle(self):
+        trace = 0
+        self.canvas.bind('<ButtonPress-1>', self.start_draw)
+        self.canvas.bind('<B1-Motion>',     self.end_draw)
+    def start_draw(self, event):
+        self.shape = [self.canvas.create_oval]
+        self.start = event
+        self.drawn = None
+    def end_draw(self, event):
+        self.canvas = event.widget
+        if self.drawn: self.canvas.delete(self.drawn)
+        objectId = self.shape[0](self.start.x, self.start.y, event.x, event.y)
+        trace = 0
+        if trace: print (objectId)
+        self.drawn = objectId
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    def use_clean(self):
+        self.canvas.delete('all')
 
 ###ZAZNACZANIE - początek
     # rysowanie prostokąta
