@@ -159,7 +159,7 @@ class InputWindow:
         self.input_gui.destroy() #Usunięcie pierwszego ona
         self.second_gui = tk.Tk() #Stworzenie drugiego okna
         self.app = SecondWindow(self.second_gui) #Wywołanie drugiego ona? Nie do końca wiem bo musiałem się wspomóc stackoverflow
-        
+
 #Klasa drugiego okna "Głównego"
 class SecondWindow:
     def __init__(self, second_gui,):
@@ -491,7 +491,7 @@ class SecondWindow:
         self.eraser_on = eraser_mode
         self.draw_on = draw_mode
         self.spray_on = spray_mode
-        self.flower_on = flower_mode
+        self.flower_line_on = flower_mode
         self.cosmos_on = cosmos_mode
 
     def paint(self, event): #rysowanie linii
@@ -527,8 +527,8 @@ class SecondWindow:
                                         event.x + self.toolsThickness, event.y + self.toolsThickness,
                                         fill=tk_rgb, outline = tk_rgb, width=self.line_width)
 
-            elif self.flower_on:
-                tk_rgb = "#%02x%02x%02x" % (randint(140,255), randint(140,225), 40)
+            elif self.flower_line_on:
+                tk_rgb = "#%02x%02x%02x" % (randint(140,255), randint(20,225), randint(5,255))
 
                 self.canvas.create_line(self.old_x , self.old_y,
                                         event.x, event.y,
