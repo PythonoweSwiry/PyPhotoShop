@@ -8,6 +8,8 @@ from PIL import ImageTk, Image
 from random import randint
 import os
 
+filepath = None
+
 #Klasa pierwszego, powitalnego okna
 class FirstWindow:
     def __init__(self,first_gui):
@@ -124,12 +126,20 @@ class InputWindow:
         InputFrame = tk.Frame(self.input_gui, bg = "#252526")
         InputFrame.grid(row = 2, column = 0, padx = (200,50))
 
+        #funkcja do wczytania obrazu Input Window - zapamietanie sciezki do wybranego obrazu
+        def SelectImageInputWindow():
+            global filepath
+            types = [("png", "*.png"), ("jpg", "*.jpg"), ("jpeg", "*.jpeg"), ("wszystkie", ["*.jpeg", "*.jpg", "*.png"])]
+            filepath = filedialog.askopenfilename( title='Wczytaj obraz', filetypes=types )
+            self.NewWindow()
+
         #Wczytanie obrazow dla przyciskow do wyboru sciezki
         self.local_disc, self.cloud, self.new = tk.PhotoImage(file = r"images\local_disc.png"), tk.PhotoImage(file = r"images\cloud.png"), tk.PhotoImage(file = r"images\new.png")
 
-        self.Option_Button_Local = tk.Button(InputFrame, bg = "#3f3f40", fg = "#eeeee8", text = "Wczytaj plik z dysku lokalnego", command = self.NewWindow, image = self.local_disc, compound = tk.LEFT, width = 200, height = 50, font = "Arial 9 bold", relief = tk.FLAT, borderwidth=0, cursor="hand2")
+        self.Option_Button_Local = tk.Button(InputFrame, bg = "#3f3f40", fg = "#eeeee8", text = "Wczytaj plik z dysku lokalnego", command = SelectImageInputWindow, image = self.local_disc, compound = tk.LEFT, width = 200, height = 50, font = "Arial 9 bold", relief = tk.FLAT, borderwidth=0, cursor="hand2")
 
-        self.Option_Button_Cloud = tk.Button(InputFrame, bg = "#3f3f40", fg = "#eeeee8", text = "Wczytaj plik z chmury", command = self.NewWindow, image = self.cloud, compound = tk.LEFT, width = 200, height = 50, font = "Arial 9 bold", relief = tk.FLAT, borderwidth=0, cursor="hand2")
+        self.Option_Button_Cloud = tk.Button(InputFrame, bg = "#3f3f40", fg = "#eeeee8", text = "Wczytaj plik z chmury\nw trakcie realizacji", command = self.NewWindow, image = self.cloud, compound = tk.LEFT, width = 200, height = 50, font = "Arial 9 bold", relief = tk.FLAT, borderwidth=0, cursor="hand2")
+        self.Option_Button_Cloud.config(state='disabled')
 
         self.Option_Button_New = tk.Button(InputFrame, bg = "#3f3f40", fg = "#eeeee8", text = "Nowy", command = self.NewWindow, image = self.new, compound = tk.LEFT, width = 200, height = 50, font = "Arial 9 bold", relief = tk.FLAT, borderwidth=0, cursor="hand2")
 
@@ -172,10 +182,14 @@ class SecondWindow:
             self.canvas.create_image(0, 0, anchor="nw" , image = self.TkImage )
             self.canvas.pack()
 
-        def SelectImage():
+        #argument domyslny na None, wykorzystamy gdy odwolamy sie tu do zmiennej globalnej filepath (ustawiana jest, gdy wybor obrazu w InputWindow)
+        def SelectImage( path=None ):
+            if path:
+                self.filename = path
+            else:
+                self.types = [("png", "*.png"), ("jpg", "*.jpg"), ("jpeg", "*.jpeg"), ("wszystkie", ["*.jpeg", "*.jpg", "*.png"])]
+                self.filename = filedialog.askopenfilename( title='Wczytaj obraz', filetypes=self.types )
             width, height = self.canvas.winfo_reqwidth(), self.canvas.winfo_reqheight()
-            self.types = [("png", "*.png"), ("jpg", "*.jpg"), ("jpeg", "*.jpeg"), ("wszystkie", ["*.jpeg", "*.jpg", "*.png"])]
-            self.filename = filedialog.askopenfilename( title='Wczytaj obraz', filetypes=self.types )
             self.pilImage = Image.open( self.filename )
             if self.pilImage.width > width:
                 self.pilImage = self.pilImage.resize( (width, int(self.pilImage.height/self.pilImage.width * width)), Image.ANTIALIAS )
@@ -207,7 +221,6 @@ class SecondWindow:
             if prompt == True:
                 SaveCanvas()
             self.canvas.delete("all")
-            self.canvas.config( bg = "red" )
 
         def TopMenuBar(self):
             # Menu bar (Przycisku na samej górze)
@@ -246,9 +259,9 @@ class SecondWindow:
         self.WidgetBarFrame = tk.Frame(self.second_gui, bg ="#252526")
         self.WidgetBarFrame.pack(pady = 8)
 
-        self.ButtonList = ["Motyw","Wklej", "Wytnij", "Kopiuj", "Zaznacz", "Zmień rozmiar", "Obróć", "Pędzel","Gumka", "Rozmiar_Pisaka",
-                            "Spray", "Edytuj kolory","Kolorowa linia","Kosmos line","Rysuj okrąg","Usuń wszystko","Kształty" ]
-        self.ColorList = ["white", "olive", "yellow", "green", "orange", "blue", "red", "grey80", "violet", "grey", "purple", "black", "pink", "brown"]
+        self.ButtonList = ["Motyw","Wytnij", "Zaznacz", "Zmień rozmiar", "Obróć", "Pędzel","Gumka", "Rozmiar_Pisaka",
+                            "Spray", "Edytuj kolory","Kolorowa linia","Kosmos line","Usuń wszystko","Kształty" ]
+        self.ColorList = ["white", "yellow", "green", "orange", "blue", "red", "grey80", "violet", "grey", "black"]
 
 
         self.ListColorButton = [] #Lista potrzebna do ustawenia pozycji colorbutton
@@ -331,6 +344,9 @@ class SecondWindow:
                 elif bb == "Kształty":
                     # for img in self.imglist:
                     self.SchapesButton, self.SchapesButton2, self.SchapesButton3, self.SchapesButton4, self.SchapesButton5, self.SchapesButton6 = [tk.Button(self.SchapesFrame, image = img, bg = "#3f3f40", fg = "#eeeee8", activebackground="#3f3f40", borderwidth=0, cursor="hand2")for img in self.imglist]
+                    self.SchapesButton.config(command= lambda: self.use_figure(option=2))
+                    self.SchapesButton3.config(command= lambda: self.use_figure(option=0))
+                    self.SchapesButton4.config(command= lambda: self.use_figure(option=1))
                     self.SchapesList.append(self.SchapesButton)
                     self.SchapesList.append(self.SchapesButton2)
                     self.SchapesList.append(self.SchapesButton3)
@@ -367,11 +383,6 @@ class SecondWindow:
                     self.BarButton.pack(side = tk.LEFT, padx = 3, pady = 5)
                     self.Button_Theme_List.append(self.BarButton)
 
-                elif bb == "Rysuj okrąg":
-                    self.BarButton = tk.Button(self.WidgetBarFrame, text = str(bb), width = 11, height = 3, command = self.use_circle, bg = "#3f3f40", fg = "#eeeee8", activebackground="#3f3f40", borderwidth=0, cursor="hand2")
-                    self.BarButton.pack(side = tk.LEFT, padx = 3, pady = 5)
-                    self.Button_Theme_List.append(self.BarButton)
-
                 elif bb == "Usuń wszystko":
                     self.BarButton = tk.Button(self.WidgetBarFrame, text = str(bb), width = 11, height = 3, command = self.use_clean, bg = "#3f3f40", fg = "#eeeee8", activebackground="#3f3f40", borderwidth=0, cursor="hand2")
                     self.BarButton.pack(side = tk.LEFT, padx = 3, pady = 5)
@@ -396,9 +407,20 @@ class SecondWindow:
                     self.BarButton = tk.Button(self.WidgetBarFrame, text = str(bb), width = 11, height = 3, bg = "#3f3f40", fg = "#eeeee8", activebackground="#3f3f40", borderwidth=0, cursor="hand2")
                     self.BarButton.pack(side = tk.LEFT, padx = 3, pady = 5)
                     self.Button_Theme_List.append(self.BarButton)
-            for col in self.ColorList:
-                self.ColorButton = tk.Button(self.ColorFrame, background = col, cursor="hand2")
-                self.ListColorButton.append(self.ColorButton)
+            
+            self.ColorButton1, self.ColorButton2, self.ColorButton3, self.ColorButton4, self.ColorButton5, self.ColorButton6, self.ColorButton7, self.ColorButton8, self.ColorButton9, self.ColorButton10 = [tk.Button(self.ColorFrame, background=col, cursor="hand2") for col in self.ColorList]
+            self.ColorButton = [self.ColorButton1, self.ColorButton2, self.ColorButton3, self.ColorButton4, self.ColorButton5, self.ColorButton6, self.ColorButton7, self.ColorButton8, self.ColorButton9, self.ColorButton10]
+            self.ColorButton1.config(command= lambda: self.modify_color(1) ) 
+            self.ColorButton2.config(command= lambda: self.modify_color(2) ) 
+            self.ColorButton3.config(command= lambda: self.modify_color(3) ) 
+            self.ColorButton4.config(command= lambda: self.modify_color(4) )
+            self.ColorButton5.config(command= lambda: self.modify_color(5) ) 
+            self.ColorButton6.config(command= lambda: self.modify_color(6) )
+            self.ColorButton7.config(command= lambda: self.modify_color(7) ) 
+            self.ColorButton8.config(command= lambda: self.modify_color(8) )
+            self.ColorButton9.config(command= lambda: self.modify_color(9) ) 
+            self.ColorButton10.config(command= lambda: self.modify_color(10) )
+            [self.ListColorButton.append(ColorButton) for ColorButton in self.ColorButton ]
 
         AddButtonBar() #Wywołanie funkcji do tworzenia przycisków
         SetColorGrid() #Wywołanie funkcji do pozycjonowania colorbuttons
@@ -408,6 +430,8 @@ class SecondWindow:
 
         self.canvas = tk.Canvas(self.second_gui, width = 855, height = 500, bg = "#252526")
         self.canvas.pack()
+        if filepath:
+            SelectImage(filepath)
 
     #FUNKCJA RYSOWANIA - POCZATEK - aktywacja przycisku ,,Pędzel"
 
@@ -415,7 +439,11 @@ class SecondWindow:
     DEFAULT_COLOR = 'black' #Póżniej bd można wstawić tutaj wybór kolorów
     DEFAULT_BACKGROUND_COLOR = 'white'
 
-
+    #do zmiany koloru pisaka i figur za pomocą przycisków
+    def modify_color(self, opt):
+        color = self.ColorButton[opt-1].cget('background')   #pobieram kolor tła przycisku
+        self.DEFAULT_COLOR = color
+        self.color = color
 
 
     def setup(self):
@@ -517,21 +545,24 @@ class SecondWindow:
         self.old_x, self.old_y = None, None
 ##FUNKCJA RYSOWANIA - koniec
 
-    def use_circle(self):
-        trace = 0
+    def use_figure(self, option):
+        self.opt = option
+        self.shapes = [self.canvas.create_oval, self.canvas.create_rectangle, self.canvas.create_line]
+        self.shape = self.shapes[option]
         self.canvas.bind('<ButtonPress-1>', self.start_draw)
-        self.canvas.bind('<B1-Motion>',     self.end_draw)
+        self.canvas.bind('<B1-Motion>',   self.end_draw)
     def start_draw(self, event):
-        self.shape = [self.canvas.create_oval]
         self.start = event
         self.drawn = None
     def end_draw(self, event):
         self.canvas = event.widget
         if self.drawn: self.canvas.delete(self.drawn)
-        tk_rgb = "#%02x%02x%02x" % (randint(5,255), randint(10,150), randint(13,255))
-        objectId = self.shape[0](self.start.x, self.start.y, event.x, event.y, outline=tk_rgb, width=4)
-        trace = 0
-        if trace: print (objectId)
+        tk_rgb = self.DEFAULT_COLOR              #  "#%02x%02x%02x" % (randint(5,255), randint(10,150), randint(13,255))
+        objectId = self.shape(self.start.x, self.start.y, event.x, event.y, width=4)
+        if self.opt == 2:
+            self.canvas.itemconfig(objectId, fill=tk_rgb)
+        else:
+            self.canvas.itemconfig(objectId, outline=tk_rgb)
         self.drawn = objectId
 
     def use_clean(self):
