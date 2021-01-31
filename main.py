@@ -263,7 +263,7 @@ class SecondWindow:
         self.WidgetBarFrame.pack(pady = 8)
 
         self.ButtonList = ["Motyw","Wytnij", "Zaznacz", "Zmień rozmiar\nin progress", "Obróć\nin progress", "Pędzel","Gumka", "Rozmiar_Pisaka",
-                            "Spray", "Edytuj kolory","Kolorowa linia","Kosmos line","Usuń wszystko","Kształty" ]
+                            "Spray", "Edytuj kolory","Kolorowa\nlinia","Kosmos\nline","Usuń wszystko","Kształty" ]
         self.ColorList = ["white", "yellow", "green", "orange", "blue", "red", "grey80", "violet", "grey", "black"]
 
 
@@ -375,14 +375,14 @@ class SecondWindow:
                     self.BarButton.pack(side = tk.LEFT, padx = 3, pady = 5)
                     self.Button_Theme_List.append(self.BarButton)
 
-                elif bb == "Kolorowa linia":
-                    self.BarButton = tk.Button(self.WidgetBarFrame, text = str(bb), width = 11, height = 3, command = self.use_color_line, bg = "#3f3f40", fg = "#eeeee8", activebackground="#3f3f40", borderwidth=0, cursor="hand2")
-                    self.BarButton.pack(side = tk.LEFT, padx = 3, pady = 5)
+                elif bb == "Kolorowa\nlinia":
+                    self.BarButton = tk.Button(self.WidgetBarFrame, text = str(bb), width = 7, height = 3, command = self.use_color_line, bg = "#3f3f40", fg = "#eeeee8", activebackground="#3f3f40", borderwidth=0, cursor="hand2")
+                    self.BarButton.pack(side = tk.LEFT, padx = (3,1), pady = 5)
                     self.Button_Theme_List.append(self.BarButton)
 
-                elif bb == "Kosmos line":
-                    self.BarButton = tk.Button(self.WidgetBarFrame, text = str(bb), width = 11, height = 3, command = self.use_cosmos, bg = "#3f3f40", fg = "#eeeee8", activebackground="#3f3f40", borderwidth=0, cursor="hand2")
-                    self.BarButton.pack(side = tk.LEFT, padx = 3, pady = 5)
+                elif bb == "Kosmos\nline":
+                    self.BarButton = tk.Button(self.WidgetBarFrame, text = str(bb), width = 6, height = 3, command = self.use_cosmos, bg = "#3f3f40", fg = "#eeeee8", activebackground="#3f3f40", borderwidth=0, cursor="hand2")
+                    self.BarButton.pack(side = tk.LEFT, padx = (1,3), pady = 5)
                     self.Button_Theme_List.append(self.BarButton)
 
                 elif bb == "Usuń wszystko":
