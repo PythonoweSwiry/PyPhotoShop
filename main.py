@@ -483,8 +483,9 @@ class SecondWindow:
         self.eraser_on = False
 
     def use_color(self): #wczytane kolorów i zmiana kolory pisaka
-        self.setup() #wykonywaie funkcji
-        self.color = colorchooser.askcolor(color=self.color)[1]
+        #self.setup() #wykonywaie funkcji
+        self.DEFAULT_COLOR = colorchooser.askcolor(color=self.color)[1]
+        self.color = self.DEFAULT_COLOR
 
     def activate_button(self, some_button, eraser_mode=False, draw_mode=False, spray_mode = False, flower_mode = False, cosmos_mode = False ):
         self.active_button.config(relief=tk.RAISED) #relief - styl widżetu (FLAT, RAISED, SUNKEN, GROOVE, RIDGE)
