@@ -458,6 +458,7 @@ class SecondWindow:
         self.canvas.bind('<ButtonRelease-1>', self.reset)#wyór klawisza myszy<ButtonRelease-1>, <ButtonRelease-2>, and <ButtonRelease-3>.
 
     def use_pen(self):
+        self.canvas.unbind("<Button-1>")    #potrzebne po zaznaczaniu
         self.setup()
         self.activate_button(self.BarButton)
 
@@ -546,19 +547,22 @@ class SecondWindow:
 ##FUNKCJA RYSOWANIA - koniec
 
     def use_figure(self, option):
+        #self.canvas.unbind("<Button-1>")      
+        #self.canvas.unbind('<B1-Motion>')
+        self.canvas.unbind('<ButtonRelease-1>')
         self.opt = option
         self.shapes = [self.canvas.create_oval, self.canvas.create_rectangle, self.canvas.create_line]
         self.shape = self.shapes[option]
-        self.canvas.bind('<ButtonPress-1>', self.start_draw)
+        self.canvas.bind('<Button-1>', self.start_draw)
         self.canvas.bind('<B1-Motion>',   self.end_draw)
     def start_draw(self, event):
-        self.start = event
+        self.start_figure = event
         self.drawn = None
     def end_draw(self, event):
         self.canvas = event.widget
         if self.drawn: self.canvas.delete(self.drawn)
         tk_rgb = self.DEFAULT_COLOR              #  "#%02x%02x%02x" % (randint(5,255), randint(10,150), randint(13,255))
-        objectId = self.shape(self.start.x, self.start.y, event.x, event.y, width=4)
+        objectId = self.shape(self.start_figure.x, self.start_figure.y, event.x, event.y, width=4)
         if self.opt == 2:
             self.canvas.itemconfig(objectId, fill=tk_rgb)
         else:
