@@ -299,7 +299,7 @@ class SecondWindow:
                 self.ListboxFrame.config(bg ="#252526")
                 self.ColorFrame.config(bg ="#252526")
                 self.SchapesFrame.config(bg ="#252526")
-                self.canvas.config(bg ="#3f3f40")
+                self.canvas.config(bg ="#252526")
                 for button in self.SchapesList:
                     button.config(bg = "#3f3f40", fg = "#eeeee8")
                 for button in self.Button_Theme_List:
@@ -331,7 +331,7 @@ class SecondWindow:
         self.SchapesFrame = tk.Frame(self.WidgetBarFrame, bg ="#252526")
         self.SchapesFrame.pack(side = tk.RIGHT, padx = 3)
 
-        self.imglist = [ImageTk.PhotoImage(Image.open(r"images\Prosta.png")), 
+        self.imglist = [ImageTk.PhotoImage(Image.open(r"images\Prosta.png")),
         ImageTk.PhotoImage(Image.open(r"images\Elipsa.png")), ImageTk.PhotoImage(Image.open(r"images\Prostokąt.png")),
         ImageTk.PhotoImage(Image.open(r"images\Serce.png"))]
         #Lista icon na schapebuttons
@@ -409,18 +409,18 @@ class SecondWindow:
                     self.BarButton = tk.Button(self.WidgetBarFrame, text = str(bb), width = 11, height = 3, bg = "#3f3f40", fg = "#eeeee8", activebackground="#3f3f40", borderwidth=0, cursor="hand2", state='disabled')
                     self.BarButton.pack(side = tk.LEFT, padx = 3, pady = 5)
                     self.Button_Theme_List.append(self.BarButton)
-            
+
             self.ColorButton1, self.ColorButton2, self.ColorButton3, self.ColorButton4, self.ColorButton5, self.ColorButton6, self.ColorButton7, self.ColorButton8, self.ColorButton9, self.ColorButton10 = [tk.Button(self.ColorFrame, background=col, cursor="hand2") for col in self.ColorList]
             self.ColorButton = [self.ColorButton1, self.ColorButton2, self.ColorButton3, self.ColorButton4, self.ColorButton5, self.ColorButton6, self.ColorButton7, self.ColorButton8, self.ColorButton9, self.ColorButton10]
-            self.ColorButton1.config(command= lambda: self.modify_color(1) ) 
-            self.ColorButton2.config(command= lambda: self.modify_color(2) ) 
-            self.ColorButton3.config(command= lambda: self.modify_color(3) ) 
+            self.ColorButton1.config(command= lambda: self.modify_color(1) )
+            self.ColorButton2.config(command= lambda: self.modify_color(2) )
+            self.ColorButton3.config(command= lambda: self.modify_color(3) )
             self.ColorButton4.config(command= lambda: self.modify_color(4) )
-            self.ColorButton5.config(command= lambda: self.modify_color(5) ) 
+            self.ColorButton5.config(command= lambda: self.modify_color(5) )
             self.ColorButton6.config(command= lambda: self.modify_color(6) )
-            self.ColorButton7.config(command= lambda: self.modify_color(7) ) 
+            self.ColorButton7.config(command= lambda: self.modify_color(7) )
             self.ColorButton8.config(command= lambda: self.modify_color(8) )
-            self.ColorButton9.config(command= lambda: self.modify_color(9) ) 
+            self.ColorButton9.config(command= lambda: self.modify_color(9) )
             self.ColorButton10.config(command= lambda: self.modify_color(10) )
             [self.ListColorButton.append(ColorButton) for ColorButton in self.ColorButton ]
 
@@ -561,14 +561,14 @@ class SecondWindow:
         self.drawn = None
     def end_draw(self, event):
         self.canvas = event.widget
-        if self.drawn: 
+        if self.drawn:
             if self.opt in [0, 1, 2]:
                 self.canvas.delete(self.drawn)              #usuwanie dla prostej, owalu i serca
             else:
-                for i in range(len(self.drawn)):   
+                for i in range(len(self.drawn)):
                     self.canvas.delete(self.drawn[i])       # usuwanie dla serca
-        tk_rgb = self.DEFAULT_COLOR       
-        
+        tk_rgb = self.DEFAULT_COLOR
+
         # rysowanie
         if self.opt in [0, 1, 2]:                           # owal, prostokąt, prosta
             objectId = self.shape(self.start_figure.x, self.start_figure.y, event.x, event.y, width=4)
@@ -580,7 +580,7 @@ class SecondWindow:
             objectId3 = self.shape[2](x-w, y+0.5*h, x, y+2*h, width=4)
             objectId4 = self.shape[3](x+w, y+0.5*h, x, y+2*h, width=4)
             objectId = [objectId1, objectId2, objectId3, objectId4]
-        
+
         # zmiana koloru
         if self.opt == 2:                                   # prosta
             self.canvas.itemconfig(objectId, fill=tk_rgb)
